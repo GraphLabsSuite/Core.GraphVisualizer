@@ -1,0 +1,11 @@
+{
+  "name": "graphlabs.core.visualizer",
+  "description": "GraphLabs Visualizer for graphs in the module",
+  "version": "0.0.1",
+  "dependencies": {
+    "graphlabs.core.graphs": "^0.0.10"
+  },
+  "devDependencies": {
+
+  }
+}
