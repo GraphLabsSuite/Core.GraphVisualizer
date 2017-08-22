@@ -1,8 +1,8 @@
-import {IGraph, IVertex, IEdge} from "graphlabs.core.graphs";
+import {GeometricGraph} from "graphlabs.core.graphs";
 
 export interface IGraphVisualizer {
 
-    graph: IGraph<IVertex, IEdge>;
+    geometric: GeometricGraph;
     width: number;
     height: number;
 
