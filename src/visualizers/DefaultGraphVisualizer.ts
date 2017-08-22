@@ -1,4 +1,4 @@
-import {IGraph, IEdge, IVertex, Vertex, GeometricGraph} from "graphlabs.core.graphs";
+import {IGraph, IEdge, IVertex, Vertex, GeometricGraph, GeometricVertex} from "graphlabs.core.graphs";
 import {IGraphVisualizer} from "../types/IGraphVisualizer";
 import {IVertexVisualizer} from "../types/IVertexVisualizer";
 import {DefaultVertexVisualizer} from "./DefaultVertexVisualizer";
@@ -9,7 +9,7 @@ export class DefaultGraphVisualizer implements IGraphVisualizer {
     public width: number;
     public height: number;
 
-    public vertices: IVertexVisualizer[];
+    public vertices: GeometricVertex<Vertex>[];
 
     public constructor(graph: IGraph<IVertex, IEdge>) {
         this.geometric = new GeometricGraph(graph);
