@@ -2,8 +2,20 @@
   "name": "graphlabs.core.visualizer",
   "description": "GraphLabs Visualizer for graphs in the module",
   "version": "0.0.1",
+  "author": "GraphLabs",
+  "keywords": [
+    "graphlabs",
+    "graph",
+    "default",
+    "visualizer"
+  ],
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eakarpov/GraphLabsSuite.Core.GraphVisualizer.git"
+  },
   "dependencies": {
-    "graphlabs.core.graphs": "^0.0.10"
+    "graphlabs.core.graphs": "^0.0.11"
   },
   "devDependencies": {
 

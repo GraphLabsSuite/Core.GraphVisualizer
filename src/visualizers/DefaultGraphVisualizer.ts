@@ -14,6 +14,7 @@ export class DefaultGraphVisualizer implements IGraphVisualizer {
         this.graph = graph;
         this.width = graph.vertices.length * 100;
         this.height = graph.vertices.length * 100;
+        this.vertices = [];
     }
 
     public calculate(): void {
