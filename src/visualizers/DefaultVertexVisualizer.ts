@@ -1,4 +1,6 @@
-import {Point, GeometricVertex, Vertex} from "graphlabs.core.graphs";
+import {Vertex} from "graphlabs.core.graphs";
+import {GeometricVertex} from "../geometrics/GeometricVertex";
+import {Point} from "../types/Point";
 
 export class DefaultVertexVisualizer {
 
@@ -10,7 +12,7 @@ export class DefaultVertexVisualizer {
         return result;
     }
 
-    public static calculateN(vertices: Vertex[], min: number, max: number): GeometricVertex[] {
+    public static calculateN(vertices: Vertex[], min: number, max: number): GeometricVertex<Vertex>[] {
         const result = [];
         for (const vertex of vertices) {
             result.push(DefaultVertexVisualizer.calculate(vertex, min, max));

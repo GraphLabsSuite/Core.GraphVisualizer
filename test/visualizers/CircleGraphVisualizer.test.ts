@@ -1,10 +1,10 @@
 import * as chai from "chai";
 import {CircleGraphVisualizer} from "../../src/visualizers/CircleGraphVisualizer";
-import {IGraph, IVertex, IEdge, Vertex, Graph} from "graphlabs.core.graphs";
+import {IGraph, IVertex, IEdge, Vertex, Graph, Edge} from "graphlabs.core.graphs";
 
 describe('CircleGraphVisualizer', () => {
     describe('#calculate()', () => {
-        const graph: IGraph<IVertex, IEdge> = new Graph();
+        const graph: IGraph<IVertex, IEdge> = new Graph<Vertex, Edge>();
         const vertexOne: IVertex = new Vertex("one", graph);
         const vertexTwo: IVertex = new Vertex("two", graph);
         graph.addVertex(vertexOne);

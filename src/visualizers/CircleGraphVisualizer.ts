@@ -1,9 +1,11 @@
 import {IGraphVisualizer} from "../types/IGraphVisualizer";
-import {IGraph, IVertex, IEdge, GeometricGraph, GeometricVertex, Vertex, Edge, Graph} from "graphlabs.core.graphs";
+import {IGraph, IVertex, IEdge, Vertex, Edge, Graph} from "graphlabs.core.graphs";
 import {CircleVertexVisualizer} from "./CircleVertexVisualizer";
+import {GeometricGraph} from "../geometrics/GeometricGraph";
+import {GeometricVertex} from "../geometrics/GeometricVertex";
 
 export class CircleGraphVisualizer implements IGraphVisualizer {
-    public geometric: GeometricGraph<Graph, Vertex, Edge>;
+    public geometric: GeometricGraph<Graph<Vertex, Edge>, Vertex, Edge>;
 
     public width: number;
     public height: number;
@@ -11,7 +13,7 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
     public vertices: GeometricVertex<Vertex>[];
 
     public constructor(graph: IGraph<IVertex, IEdge>) {
-        this.geometric = new GeometricGraph<Graph, Vertex, Edge>(<Graph> graph);
+        this.geometric = new GeometricGraph<Graph<Vertex, Edge>, Vertex, Edge>(<Graph<Vertex, Edge>> graph);
         this.width = graph.vertices.length * 100;
         this.height = graph.vertices.length * 100;
         this.vertices = [];
