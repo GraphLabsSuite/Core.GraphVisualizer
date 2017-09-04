@@ -10,13 +10,10 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
     public width: number;
     public height: number;
 
-    public vertices: GeometricVertex<Vertex>[];
-
     public constructor(graph: IGraph<IVertex, IEdge>) {
         this.geometric = new GeometricGraph<Graph<Vertex, Edge>, Vertex, Edge>(<Graph<Vertex, Edge>> graph);
         this.width = graph.vertices.length * 100;
         this.height = graph.vertices.length * 100;
-        this.vertices = [];
     }
 
     /**
@@ -24,9 +21,9 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
      */
     public calculate(): void {
         // Calculating phi angle between two vertices
-        const phi: number = 360 / this.geometric.graph.vertices.length;
-        // Calculating radius of the vertex circle (10 - default radius
-        const radius: number = (2 * 2 * 10) / (2 * Math.PI);
+        const phi: number = 2 * Math.PI / this.geometric.graph.vertices.length;
+        // Calculating radius of the vertex circle (10 - default radius, 2 * 10 - diametr, x2 - between two vertices
+        const radius: number = (this.geometric.graph.vertices.length * 4 * 10) / (2 * Math.PI);
         const x_center = this.width / 2;
         const y_center = this.height / 2;
         let n = 0;

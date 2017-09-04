@@ -15,9 +15,9 @@ describe('CircleGraphVisualizer', () => {
             visualizer.calculate();
             chai.assert(visualizer.geometric.vertices.length == 2);
             chai.assert(visualizer.geometric.vertices[0].center.X == 100);
-            chai.assert(visualizer.geometric.vertices[0].center.Y == 110);
+            chai.assert(Math.floor(visualizer.geometric.vertices[0].center.Y) == 112);
             chai.assert(visualizer.geometric.vertices[1].center.X == 100);
-            chai.assert(visualizer.geometric.vertices[0].center.Y == 90);
+            chai.assert(Math.floor(visualizer.geometric.vertices[1].center.Y) == 87);
         });
     });
 });

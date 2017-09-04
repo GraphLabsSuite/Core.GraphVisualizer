@@ -24,9 +24,7 @@ export class GeometricGraph<T extends Graph<K, R>, K extends Vertex, R extends E
    */
   public constructor(graph: T) {
     this.graph = graph;
-    for (let vertex of graph.vertices)
-      this.vertices.push(new GeometricVertex(vertex));
-    for (let edge of graph.edges)
-      this.edges.push(new GeometricEdge(edge));
+    this.vertices = [];
+    this.edges = [];
   }
 }

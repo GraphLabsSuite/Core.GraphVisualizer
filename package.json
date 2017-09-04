@@ -15,7 +15,7 @@
     "url": "https://github.com/eakarpov/GraphLabsSuite.Core.GraphVisualizer.git"
   },
   "dependencies": {
-    "graphlabs.core.graphs": "^0.0.21",
+    "graphlabs.core.graphs": "^0.0.23",
     "typescript": "^2.4.2"
   },
   "devDependencies": {
