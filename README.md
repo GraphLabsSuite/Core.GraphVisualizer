@@ -7,4 +7,4 @@ A default graph visualizer for task template in graphlabs web project
 * do not forget to update version before publishing
 * while contributing, write maximum comments
 * add specification tags of JSDoc to every function and class you have created
-* seek to write tests over every functionality you adds to the module
+* seek to write tests over every functionality you add to the module
