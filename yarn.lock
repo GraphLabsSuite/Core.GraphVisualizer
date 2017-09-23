@@ -98,13 +98,9 @@ deep-eql@^3.0.0:
   dependencies:
     type-detect "^4.0.0"
 
-diff@3.2.0:
+diff@3.2.0, diff@^3.1.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.2.0.tgz#c9ce393a4b7cbd0b058a725c93df299027868ff9"
-
-diff@^3.1.0:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-3.3.1.tgz#aa8567a6eed03c531fc89d3f711cd0e5259dec75"
 
 escape-string-regexp@1.0.5, escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -133,9 +129,9 @@ glob@7.1.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphlabs.core.graphs@^0.0.26:
-  version "0.0.26"
-  resolved "https://registry.yarnpkg.com/graphlabs.core.graphs/-/graphlabs.core.graphs-0.0.26.tgz#6f387fe0590358b8c87f6bf7adeffd7a2235d585"
+graphlabs.core.graphs@^0.0.28:
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/graphlabs.core.graphs/-/graphlabs.core.graphs-0.0.28.tgz#c8e21e4edd7e88d693909b7f6e100385532cf62a"
   dependencies:
     "@types/lodash" "^4.14.64"
     immutable "^3.8.1"
