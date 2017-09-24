@@ -20,7 +20,7 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
      */
     public calculate(): void {
         const vertexAmount: number = this.geometric.graph.vertices.length;
-        if (vertexAmount > 0) {
+        if (vertexAmount > 1) {
             // Calculating phi angle between two vertices
             const phi: number = 2 * Math.PI / vertexAmount;
 
@@ -45,6 +45,11 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
                 this.geometric.vertices.push(CircleVertexVisualizer.calculate(vertex, x, y, vertexRadius));
                 n++;
             }
+        } else if (vertexAmount == 1) {
+            const length: number = (Math.min(this.width, this.height)) / 2;
+            const x_center = this.width / 2;
+            const y_center = this.height / 2;
+            this.geometric.vertices.push(CircleVertexVisualizer.calculate(vertex, x_center, y_center, length / 5));
         }
     }
 }
