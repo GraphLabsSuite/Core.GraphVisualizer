@@ -2,6 +2,8 @@ import {IGraphVisualizer} from "../types/IGraphVisualizer";
 import {IGraph, IVertex, IEdge, Vertex, Edge, Graph} from "graphlabs.core.graphs";
 import {CircleVertexVisualizer} from "./CircleVertexVisualizer";
 import {GeometricGraph} from "../geometrics/GeometricGraph";
+import {Point} from "../types/Point";
+import {EdgeVisualizer} from "./EdgeVisualizer";
 
 export class CircleGraphVisualizer implements IGraphVisualizer {
     public geometric: GeometricGraph<Graph<Vertex, Edge>, Vertex, Edge>;
@@ -44,6 +46,11 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
                 const x: number = radius * Math.sin(n * phi) + x_center;
                 this.geometric.vertices.push(CircleVertexVisualizer.calculate(vertex, x, y, vertexRadius));
                 n++;
+            }
+            for (const edge of this.geometric.graph.edges) {
+                const p1: Point = this.geometric.vertices.filter(v => v.label == edge.vertexOne.name)[0].center;
+                const p2: Point = this.geometric.vertices.filter(v => v.label == edge.vertexTwo.name)[0].center;
+                this.geometric.edges.push(EdgeVisualizer.calculate(edge, p1, p2));
             }
         } else if (vertexAmount == 1) {
             const length: number = (Math.min(this.width, this.height)) / 2;

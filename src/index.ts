@@ -9,6 +9,7 @@ export * from "./visualizers/DefaultGraphVisualizer";
 export * from "./visualizers/CircleGraphVisualizer";
 export * from "./visualizers/CircleVertexVisualizer";
 export * from "./visualizers/DefaultVertexVisualizer";
+export * from "./visualizers/EdgeVisualizer";
 
 export * from "./geometrics/GeometricGraph";
 export * from "./geometrics/GeometricVertex";
