@@ -129,9 +129,9 @@ glob@7.1.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/graceful-readlink/-/graceful-readlink-1.0.1.tgz#4cafad76bc62f02fa039b2f94e9a3dd3a391a725"
 
-graphlabs.core.graphs@^0.0.28:
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/graphlabs.core.graphs/-/graphlabs.core.graphs-0.0.28.tgz#c8e21e4edd7e88d693909b7f6e100385532cf62a"
+graphlabs.core.graphs@^0.0.29:
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/graphlabs.core.graphs/-/graphlabs.core.graphs-0.0.29.tgz#33e75977619b229bbeeba96fa657f49d046bad2c"
   dependencies:
     "@types/lodash" "^4.14.64"
     immutable "^3.8.1"
