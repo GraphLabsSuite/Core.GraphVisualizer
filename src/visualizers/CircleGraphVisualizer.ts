@@ -47,6 +47,7 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
             }
         } else if (vertexAmount == 1) {
             const length: number = (Math.min(this.width, this.height)) / 2;
+            const vertex = this.geometric.graph.vertices[0];
             const x_center = this.width / 2;
             const y_center = this.height / 2;
             this.geometric.vertices.push(CircleVertexVisualizer.calculate(vertex, x_center, y_center, length / 5));
