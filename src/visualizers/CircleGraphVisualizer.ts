@@ -21,6 +21,8 @@ export class CircleGraphVisualizer implements IGraphVisualizer {
      * Function of calculating coordinates of the geometric graph
      */
     public calculate(): void {
+        this.geometric.vertices = [];
+        this.geometric.edges = [];
         const vertexAmount: number = this.geometric.graph.vertices.length;
         if (vertexAmount > 1) {
             // Calculating phi angle between two vertices

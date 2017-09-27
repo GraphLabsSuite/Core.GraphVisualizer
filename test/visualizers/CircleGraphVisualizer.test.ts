@@ -9,6 +9,7 @@ describe('CircleGraphVisualizer', () => {
         const vertexTwo: IVertex = new Vertex("two", graph);
         graph.addVertex(vertexOne);
         graph.addVertex(vertexTwo);
+        graph.addEdge(new Edge(vertexOne, vertexTwo));
         const visualizer: CircleGraphVisualizer = new CircleGraphVisualizer(graph);
 
         it("calculate graph coordinates with 2 vertices", () => {
@@ -18,6 +19,11 @@ describe('CircleGraphVisualizer', () => {
             // chai.assert(Math.floor(visualizer.geometric.vertices[0].center.Y) == 112);
             // chai.assert(visualizer.geometric.vertices[1].center.X == 100);
             // chai.assert(Math.floor(visualizer.geometric.vertices[1].center.Y) == 87);
+        });
+
+        it("Adding edges to geometric", () => {
+           visualizer.calculate();
+           chai.assert(visualizer.geometric.edges.length == 1);
         });
 
         const graph1: IGraph<IVertex, IEdge> = new Graph<Vertex, Edge>();
