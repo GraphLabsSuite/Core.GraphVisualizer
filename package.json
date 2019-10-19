@@ -17,7 +17,11 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "dependencies": {
+    "@types/d3": "^5.7.2",
+    "@types/react": "^16.9.2",
+    "d3": "^5.12.0",
     "graphlabs.core.graphs": "^0.0.30",
+    "react": "^16.9.0",
     "typescript": "^2.4.2"
   },
   "devDependencies": {
