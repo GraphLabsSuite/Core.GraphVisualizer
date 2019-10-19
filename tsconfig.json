@@ -5,7 +5,8 @@
     "experimentalDecorators": true,
     "noImplicitAny": true,
     "outDir": "build",
-    "declaration": true
+    "declaration": true,
+    "jsx": "react"
   },
   "include": [
     "src/**/*"
