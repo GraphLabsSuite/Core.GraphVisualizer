@@ -3,6 +3,7 @@ import {RAProps, ReadableAdapter} from "./ReadableAdapter";
 import {select} from "d3-selection";
 import * as d3 from 'd3';
 import {Vertex, Edge} from "graphlabs.core.graphs";
+import {GeometricEdge} from "..";
 
 export class WritableAdapter extends ReadableAdapter{
 
@@ -29,26 +30,29 @@ export class WritableAdapter extends ReadableAdapter{
 
     protected removeVertex() {
         super.removeVertex();
+        const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
         if (this.vertexOne){
             this.props.graph.removeVertex(this.props.graph.vertices[Number(this.vertexOne)]);
             this.vertexOne = null;
         }
-        //this.removeVertexFromSVG(elem);
+        this.removeVertexFromSVG(elem);
     }
 
     protected removeEdge() {
         super.removeEdge();
+        let elem: GeometricEdge<Edge>;
         for (let i=0;i<this.props.graph.edges.length;i++) {
             if (this.vertexOne && this.vertexTwo) {
                 if(this.props.graph.edges[i].vertexOne.name==this.vertexOne && this.props.graph.edges[i].vertexTwo.name==this.vertexTwo
                 || this.props.graph.edges[i].vertexOne.name==this.vertexTwo && this.props.graph.edges[i].vertexTwo.name==this.vertexOne){
+                    elem = this.graphVisualizer.geometric.edges[i];
                     this.props.graph.removeEdge(this.props.graph.edges[i]);
                 }
             }
         }
         this.vertexOne = null;
         this.vertexTwo = null;
-        //this.props.graph.removeEdgeFromSVG(elem);
+        this.removeEdgeFromSVG(elem);
     }
 
     protected clickVertex(elem: SVGCircleElement) {

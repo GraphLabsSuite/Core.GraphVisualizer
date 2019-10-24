@@ -14,3 +14,6 @@ export * from "./visualizers/EdgeVisualizer";
 export * from "./geometrics/GeometricGraph";
 export * from "./geometrics/GeometricVertex";
 export * from "./geometrics/GeometricEdge";
+
+export * from "./adapters/ReadableAdapter";
+export * from "./adapters/WritableAdapter";

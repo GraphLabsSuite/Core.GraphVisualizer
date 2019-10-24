@@ -154,6 +154,16 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('pointer-events', 'none');
     }
 
+    removeVertexFromSVG(elem: GeometricVertex<Vertex>){
+        select(`#vertex_${elem.label}`)
+            .remove();
+    }
+
+    removeEdgeFromSVG(elem: GeometricEdge<Edge>){
+       select(`#edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+           .remove();
+    }
+
     updateSvg() {
         this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
         this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
