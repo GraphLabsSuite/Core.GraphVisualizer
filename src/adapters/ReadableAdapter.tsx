@@ -35,27 +35,27 @@ export class ReadableAdapter extends Component<RAProps, State> {
         return this._graph;
     } */
 
-   protected clickEdge(elem: SVGLineElement){
+   public clickEdge(elem: SVGLineElement){
 
    }
 
-   protected clickVertex(elem: SVGCircleElement){
+   public clickVertex(elem: SVGCircleElement){
 
    }
 
-   protected  addVertex(){
+   public  addVertex(){
 
    }
 
-   protected addEdge(){
+   public addEdge(){
 
    }
 
-   protected removeVertex(){
+   public removeVertex(){
 
    }
 
-   protected removeEdge(){
+   public removeEdge(){
 
    }
 
