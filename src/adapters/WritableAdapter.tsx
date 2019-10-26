@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {RAProps, ReadableAdapter} from "./ReadableAdapter";
+import {ReadableAdapter} from "./ReadableAdapter";
 import {select} from "d3-selection";
 import * as d3 from 'd3';
 import {Vertex, Edge} from "graphlabs.core.graphs";
@@ -10,14 +10,14 @@ export class WritableAdapter extends ReadableAdapter{
     public vertexOne: string;
     public vertexTwo: string;
 
-    protected addVertex() {
+    public addVertex() {
         super.addVertex();
         this.props.graph.addVertex(new Vertex((this.props.graph.vertices.length+1).toString()));
         const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
         this.addVertexToSVG(elem);
     }
 
-    protected addEdge() {
+    public addEdge() {
         super.addEdge();
         if (this.vertexOne && this.vertexTwo){
             this.props.graph.addEdge(new Edge(this.props.graph.vertices[Number(this.vertexOne)], this.props.graph.vertices[Number(this.vertexTwo)]));
@@ -28,7 +28,7 @@ export class WritableAdapter extends ReadableAdapter{
         this.addEdgeToSVG(elem);
     }
 
-    protected removeVertex() {
+    public removeVertex() {
         super.removeVertex();
         const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
         if (this.vertexOne){
@@ -38,7 +38,7 @@ export class WritableAdapter extends ReadableAdapter{
         this.removeVertexFromSVG(elem);
     }
 
-    protected removeEdge() {
+    public removeEdge() {
         super.removeEdge();
         let elem: GeometricEdge<Edge>;
         for (let i=0;i<this.props.graph.edges.length;i++) {
@@ -55,7 +55,7 @@ export class WritableAdapter extends ReadableAdapter{
         this.removeEdgeFromSVG(elem);
     }
 
-    protected clickVertex(elem: SVGCircleElement) {
+    public clickVertex(elem: SVGCircleElement) {
         super.clickVertex(elem);
         if (this.vertexOne == null){
             this.vertexOne = elem.getAttribute('label');
@@ -74,7 +74,7 @@ export class WritableAdapter extends ReadableAdapter{
         }
     }
 
-    protected clickEdge(elem: SVGLineElement) {
+    public clickEdge(elem: SVGLineElement) {
         super.clickEdge(elem);
         this.vertexOne=elem.getAttribute('out');
         this.vertexTwo=elem.getAttribute('in');
