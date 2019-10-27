@@ -198,7 +198,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     componentWillReceiveProps(nextProps: RAProps){
         if(nextProps.graph !== this.props.graph){
-            this.graphVisualizer = new CircleGraphVisualizer(this.props.graph);
+            this.graphVisualizer = new CircleGraphVisualizer(nextProps.graph);
             this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
             this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
             this.graphVisualizer.calculate();
