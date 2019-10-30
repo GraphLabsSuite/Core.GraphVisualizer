@@ -3,7 +3,7 @@ import {ReadableAdapter} from "./ReadableAdapter";
 import {select} from "d3-selection";
 import * as d3 from 'd3';
 import {Vertex, Edge} from "graphlabs.core.graphs";
-import {GeometricEdge} from "..";
+import {GeometricEdge, GeometricVertex} from "..";
 
 export class WritableAdapter extends ReadableAdapter{
 
@@ -12,7 +12,9 @@ export class WritableAdapter extends ReadableAdapter{
 
     public addVertex() {
         super.addVertex();
-        this.props.graph.addVertex(new Vertex((this.props.graph.vertices.length+1).toString()));
+        const vertex = new Vertex((this.props.graph.vertices.length).toString());
+        this.props.graph.addVertex(vertex);
+        this.graphVisualizer.geometric.vertices.push(new GeometricVertex(vertex));
         const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
         this.addVertexToSVG(elem);
     }
@@ -20,12 +22,14 @@ export class WritableAdapter extends ReadableAdapter{
     public addEdge() {
         super.addEdge();
         if (this.vertexOne && this.vertexTwo){
-            this.props.graph.addEdge(new Edge(this.props.graph.vertices[Number(this.vertexOne)], this.props.graph.vertices[Number(this.vertexTwo)]));
+            const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne)], this.props.graph.vertices[Number(this.vertexTwo)]);
+            this.props.graph.addEdge(edge);
             this.vertexOne = null;
             this.vertexTwo = null;
+            this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
+            const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
+            this.addEdgeToSVG(elem);
         }
-        const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
-        this.addEdgeToSVG(elem);
     }
 
     public removeVertex() {
@@ -36,6 +40,7 @@ export class WritableAdapter extends ReadableAdapter{
             this.vertexOne = null;
         }
         this.removeVertexFromSVG(elem);
+        this.graphVisualizer.geometric.vertices.pop();
     }
 
     public removeEdge() {
@@ -47,6 +52,7 @@ export class WritableAdapter extends ReadableAdapter{
                 || this.props.graph.edges[i].vertexOne.name==this.vertexTwo && this.props.graph.edges[i].vertexTwo.name==this.vertexOne){
                     elem = this.graphVisualizer.geometric.edges[i];
                     this.props.graph.removeEdge(this.props.graph.edges[i]);
+                    this.graphVisualizer.geometric.edges.splice(i,1);
                 }
             }
         }
