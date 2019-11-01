@@ -35,27 +35,27 @@ export class ReadableAdapter extends Component<RAProps, State> {
         return this._graph;
     } */
 
-   protected clickEdge(elem: SVGLineElement){
+   public clickEdge(elem: SVGLineElement){
 
    }
 
-   protected clickVertex(elem: SVGCircleElement){
+   public clickVertex(elem: SVGCircleElement){
 
    }
 
-   protected  addVertex(){
+   public  addVertex(){
 
    }
 
-   protected addEdge(){
+   public addEdge(){
 
    }
 
-   protected removeVertex(){
+   public removeVertex(){
 
    }
 
-   protected removeEdge(){
+   public removeEdge(){
 
    }
 
@@ -68,43 +68,6 @@ export class ReadableAdapter extends Component<RAProps, State> {
         }
         for (const elem of this.graphVisualizer.geometric.vertices) {
             this.addVertexToSVG(elem);
-        }
-    }
-
-    startDrag(this: SVGCircleElement) {
-        const circle = d3.select(this).classed('dragging', true);
-        d3.event.on('drag', dragged).on('end', ended);
-        const radius = parseFloat(circle.attr('r'));
-        function dragged(d: any) {
-            if (d3.event.x < this.ref.getBoundingClientRect().width - radius
-                && d3.event.x > radius
-                && d3.event.y < this.ref.getBoundingClientRect().height - radius
-                && d3.event.y > radius) {
-                circle.raise().attr('cx', d3.event.x).attr('cy', d3.event.y);
-                const name = circle.attr('id');
-                const _id = name.substring(7);
-                select(`#label_${_id}`)
-                    .raise()
-                    .attr('x', d3.event.x)
-                    .attr('y', d3.event.y + +circle.attr('r') / 4);
-                d3.selectAll('line').each(function (l: any, li: any) {
-                    if (`vertex_${d3.select(this).attr('out')}` === name) {
-                        select(this)
-                            .attr('x1', d3.event.x)
-                            .attr('y1', d3.event.y);
-                    }
-                    if (`vertex_${d3.select(this).attr('in')}` === name) {
-                        select(this)
-                            .attr('x2', d3.event.x)
-                            .attr('y2', d3.event.y);
-                    }
-                });
-            }
-            //     console.log("ATTENTION!!!");
-            // }
-        }
-        function ended() {
-            circle.classed('dragging', false);
         }
     }
 
@@ -137,7 +100,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke', '#000')
             .style('stroke-width', 5)
             .classed('dragging', true)
-            .call(d3.drag<SVGCircleElement, {}>().on('start', this.startDrag))
+            .call(d3.drag<SVGCircleElement, {}>().on('start', startDrag))
             .on('click', this.clickVertex);
         select(this.ref)
             .append('text')
@@ -152,6 +115,54 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('padding-top', '50%')
             .style('user-select', 'none')
             .style('pointer-events', 'none');
+        const referrer = this.ref;
+        function startDrag(this: SVGCircleElement) {
+            const circle = d3.select(this).classed('dragging', true);
+            d3.event.on('drag', dragged).on('end', ended);
+            const radius = parseFloat(circle.attr('r'));
+            function dragged(d: any) {
+                if (d3.event.x < referrer.getBoundingClientRect().width - radius
+                    && d3.event.x > radius
+                    && d3.event.y < referrer.getBoundingClientRect().height - radius
+                    && d3.event.y > radius) {
+                    circle.raise().attr('cx', d3.event.x).attr('cy', d3.event.y);
+                    const name = circle.attr('id');
+                    const _id = name.substring(7);
+                    select(`#label_${_id}`)
+                        .raise()
+                        .attr('x', d3.event.x)
+                        .attr('y', d3.event.y + +circle.attr('r') / 4);
+                    d3.selectAll('line').each(function (l: any, li: any) {
+                        if (`vertex_${d3.select(this).attr('out')}` === name) {
+                            select(this)
+                                .attr('x1', d3.event.x)
+                                .attr('y1', d3.event.y);
+                        }
+                        if (`vertex_${d3.select(this).attr('in')}` === name) {
+                            select(this)
+                                .attr('x2', d3.event.x)
+                                .attr('y2', d3.event.y);
+                        }
+                    });
+                }
+                //     console.log("ATTENTION!!!");
+                // }
+            }
+
+            function ended() {
+                circle.classed('dragging', false);
+            }
+        }
+    }
+
+    removeVertexFromSVG(elem: GeometricVertex<Vertex>){
+        select(`#vertex_${elem.label}`)
+            .remove();
+    }
+
+    removeEdgeFromSVG(elem: GeometricEdge<Edge>){
+       select(`#edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+           .remove();
     }
 
     updateSvg() {
@@ -188,7 +199,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     componentWillReceiveProps(nextProps: RAProps){
         if(nextProps.graph !== this.props.graph){
-            this.graphVisualizer = new CircleGraphVisualizer(this.props.graph);
+            this.graphVisualizer = new CircleGraphVisualizer(nextProps.graph);
             this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
             this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
             this.graphVisualizer.calculate();
