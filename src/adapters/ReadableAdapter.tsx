@@ -3,11 +3,9 @@ import {select, style} from 'd3-selection';
 import * as d3 from 'd3';
 import {Vertex, Edge, GraphSerializer, IEdge, IGraph, IVertex} from 'graphlabs.core.graphs';
 import {CircleGraphVisualizer, GeometricEdge, GeometricVertex} from '..';
-
 import { Component } from 'react';
-import { dispatch } from 'd3';
-import {svg} from "d3";
 
+import {svg} from "d3";
 export interface RAProps {
     className?: string;
     graph: IGraph<IVertex, IEdge>;
@@ -21,6 +19,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     public ref!: SVGSVGElement;
     public graphVisualizer!: CircleGraphVisualizer;
+    public vertexOne: string;
+    public vertexTwo: string;
 
    // private _graph!: IGraphView;
    /* get graph(): IGraphView {
@@ -35,13 +35,38 @@ export class ReadableAdapter extends Component<RAProps, State> {
         return this._graph;
     } */
 
-   public clickEdge(elem: SVGLineElement){
+   /*  public clickVertex(elem: SVGCircleElement) {
+        if (this.vertexOne == null){
+            this.vertexOne = elem.getAttribute('label');
+        }
+        else {
+            this.vertexTwo = elem.getAttribute('label');
+        }
+        let elemColour = select<SVGCircleElement, {}>(elem).style("fill");
+        if (elemColour === 'rgb(255, 0, 0)'){
+            select<SVGCircleElement, {}>(elem)
+                .style('fill', '#eee');
+        }
+        else {
+            select<SVGCircleElement, {}>(elem)
+                .style('fill', '#ff0000');
+        }
+    }
 
-   }
+    public clickEdge(elem: SVGLineElement) {
+        this.vertexOne=elem.getAttribute('out');
+        this.vertexTwo=elem.getAttribute('in');
+        let elemColour = select<SVGLineElement, {}>(elem).style("fill");
+        if (elemColour === 'rgb(255, 0, 0)'){
+            select<SVGLineElement, {}>(elem)
+                .style('fill', '#000');
+        }
+        else {
+            select<SVGLineElement, {}>(elem)
+                .style('fill', '#ff0000');
+        }
+    } */
 
-   public clickVertex(elem: SVGCircleElement){
-
-   }
 
    public  addVertex(){
 
@@ -85,7 +110,21 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke', 'black')
             .style('stroke-width', 5)
             .style('fill', 'none')
-            .on('click', this.clickEdge);
+            .on('click', clickEdge);
+        let vertexOne = this.vertexOne;
+        let vertexTwo = this.vertexTwo;
+        function clickEdge(this: SVGLineElement) {
+            vertexOne = this.getAttribute('out');
+            vertexTwo = this.getAttribute('in');
+            let elemColour = select<SVGLineElement, {}>(this).style("fill");
+            if (elemColour === 'rgb(255, 0, 0)') {
+                select<SVGLineElement, {}>(this)
+                    .style('fill', '#000');
+            } else {
+                select<SVGLineElement, {}>(this)
+                    .style('fill', '#ff0000');
+            }
+        }
     }
 
     addVertexToSVG(elem: GeometricVertex<Vertex>){
@@ -101,7 +140,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke-width', 5)
             .classed('dragging', true)
             .call(d3.drag<SVGCircleElement, {}>().on('start', startDrag))
-            .on('click', this.clickVertex);
+            .on('click', clickVertex);
         select(this.ref)
             .append('text')
             .attr('id', `label_${elem.label}`)
@@ -151,6 +190,20 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
             function ended() {
                 circle.classed('dragging', false);
+            }
+        }
+        let vertexOne = this.vertexOne;
+        let vertexTwo = this.vertexTwo;
+        function clickVertex(this: SVGCircleElement) {
+            vertexOne = this.getAttribute('label');
+            let elemColour = select<SVGCircleElement, {}>(this).style("fill");
+            if (elemColour === 'rgb(255, 0, 0)'){
+                select<SVGCircleElement, {}>(this)
+                    .style('fill', '#eee');
+            }
+            else {
+                select<SVGCircleElement, {}>(this)
+                    .style('fill', '#ff0000');
             }
         }
     }
