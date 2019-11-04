@@ -116,6 +116,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
         function clickEdge(this: SVGLineElement) {
             vertexOne = this.getAttribute('out');
             vertexTwo = this.getAttribute('in');
+            console.log(vertexOne);
+            console.log(vertexTwo);
             let elemColour = select<SVGLineElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)') {
                 select<SVGLineElement, {}>(this)
@@ -193,9 +195,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
             }
         }
         let vertexOne = this.vertexOne;
+        console.log("first"+this.vertexOne);
         let vertexTwo = this.vertexTwo;
         function clickVertex(this: SVGCircleElement) {
-            vertexOne = this.getAttribute('label');
+            if (!vertexOne) {
+                vertexOne = this.getAttribute('label');
+            }
+            else
+            {
+                vertexTwo = this.getAttribute('label');
+            }
+            console.log(vertexOne);
+            console.log(vertexTwo);
             let elemColour = select<SVGCircleElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)'){
                 select<SVGCircleElement, {}>(this)

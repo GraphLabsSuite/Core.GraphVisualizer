@@ -13,42 +13,51 @@ export class WritableAdapter extends ReadableAdapter{
         this.props.graph.addVertex(vertex);
         this.graphVisualizer.geometric.vertices.push(new GeometricVertex(vertex));
         const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
-        this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
-        this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
-        this.graphVisualizer.calculate();
+        //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+        //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+        //this.graphVisualizer.calculate();
         this.addVertexToSVG(elem);
+        this.updateSvg();
     }
 
     public addEdge() {
         super.addEdge();
+        console.log('vert1'+this.vertexOne);
+        console.log('vert2'+this.vertexTwo);
         if (this.vertexOne && this.vertexTwo){
             const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne)], this.props.graph.vertices[Number(this.vertexTwo)]);
             this.props.graph.addEdge(edge);
-            this.vertexOne = null;
-            this.vertexTwo = null;
             this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
             const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
-            this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
-            this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
-            this.graphVisualizer.calculate();
+            //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+            //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+            //this.graphVisualizer.calculate();
             this.addEdgeToSVG(elem);
+            this.updateSvg();
+            this.vertexOne = null;
+            this.vertexTwo = null;
         }
     }
 
     public removeVertex() {
         super.removeVertex();
+        console.log('vert1'+this.vertexOne);
+        //console.log(this.vertexTwo);
         let elem: GeometricVertex<Vertex>;
         if (this.vertexOne) {
-            for (let i = 0; i < this.props.graph.vertices.length; i++) {
-                if (this.props.graph.vertices[i].name == this.vertexOne){
+            for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
+                if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne){
+                    console.log(this.graphVisualizer.geometric.vertices[i].label);
+                    console.log(this.props.graph.vertices[i].name);
                     const elem = this.graphVisualizer.geometric.vertices[i];
                     this.props.graph.removeVertex(this.props.graph.vertices[i]);
-                    this.vertexOne = null;
                     this.graphVisualizer.geometric.vertices.splice(i,1);
-                    this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
-                    this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
-                    this.graphVisualizer.calculate();
+                    //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+                    //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+                    //this.graphVisualizer.calculate();
                     this.removeVertexFromSVG(elem);
+                    this.updateSvg();
+                    this.vertexOne = null;
                 }
             }
         }
@@ -67,12 +76,13 @@ export class WritableAdapter extends ReadableAdapter{
                 }
             }
         }
+        this.removeEdgeFromSVG(elem);
+        this.updateSvg();
+        //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+        //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+        //this.graphVisualizer.calculate();
         this.vertexOne = null;
         this.vertexTwo = null;
-        this.removeEdgeFromSVG(elem);
-        this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
-        this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
-        this.graphVisualizer.calculate();
     }
 
 
