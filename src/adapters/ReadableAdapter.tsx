@@ -35,7 +35,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
         return this._graph;
     } */
 
-   /*  public clickVertex(elem: SVGCircleElement) {
+   /* public clickVertex(elem: SVGCircleElement) {
         if (this.vertexOne == null){
             this.vertexOne = elem.getAttribute('label');
         }
@@ -65,8 +65,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             select<SVGLineElement, {}>(elem)
                 .style('fill', '#ff0000');
         }
-    } */
-
+    }
+*/
 
    public  addVertex(){
 
@@ -111,18 +111,19 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke-width', 5)
             .style('fill', 'none')
             .on('click', clickEdge);
-        let vertexOne = this.vertexOne;
-        let vertexTwo = this.vertexTwo;
+        //let vertexOne = this.vertexOne;
+        //let vertexTwo = this.vertexTwo;
         function clickEdge(this: SVGLineElement) {
-            vertexOne = this.getAttribute('out');
-            vertexTwo = this.getAttribute('in');
-            console.log(vertexOne);
-            console.log(vertexTwo);
+           // this.vertexOne = this.getAttribute('out');
+           // this.vertexTwo = this.getAttribute('in');
+           // console.log(this.vertexOne);
+          //  console.log(this.vertexTwo);
             let elemColour = select<SVGLineElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)') {
                 select<SVGLineElement, {}>(this)
                     .style('fill', '#000');
-            } else {
+            }
+            else {
                 select<SVGLineElement, {}>(this)
                     .style('fill', '#ff0000');
             }
@@ -194,19 +195,21 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 circle.classed('dragging', false);
             }
         }
-        let vertexOne = this.vertexOne;
-        console.log("first"+this.vertexOne);
-        let vertexTwo = this.vertexTwo;
-        function clickVertex(this: SVGCircleElement) {
-            if (!vertexOne) {
-                vertexOne = this.getAttribute('label');
+        //let vertexOne = this.vertexOne;
+        //console.log("first"+this.vertexOne);
+        //let vertexTwo = this.vertexTwo;
+        function clickVertex(this: SVGCircleElement) { //я хочу здесь в переменную сложить название вершины, по которой мы кликнули
+           /* if (!this.vertexOne) {                    //переменная - атрибут класса, ибо она так передастся в Writabl adapter
+                this.vertexOne = elem.getAttribute('label');  //но я не могу ничего вызвать через this, потому что  параметр этой функции называется this
+                                                              //это свзано c тем, что в 146 строке эта функция используется как обработчик событий
+
             }
-            else
+            if (!this.vertexTwo)
             {
-                vertexTwo = this.getAttribute('label');
+                this.vertexTwo = elem.getAttribute('label');
             }
-            console.log(vertexOne);
-            console.log(vertexTwo);
+            console.log(this.vertexOne);
+            console.log(this.vertexTwo); */
             let elemColour = select<SVGCircleElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)'){
                 select<SVGCircleElement, {}>(this)
