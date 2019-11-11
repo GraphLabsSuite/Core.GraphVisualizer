@@ -15,12 +15,13 @@ export interface State {
     events: Event[];
 }
 
+
 export class ReadableAdapter extends Component<RAProps, State> {
 
     public ref!: SVGSVGElement;
     public graphVisualizer!: CircleGraphVisualizer;
-    public vertexOne: string;
-    public vertexTwo: string;
+    public vertexOne: IVertex;
+    public vertexTwo: IVertex;
 
    // private _graph!: IGraphView;
    /* get graph(): IGraphView {
@@ -98,8 +99,9 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     addEdgeToSVG(elem: GeometricEdge<Edge>){
         const data = [{x: elem.outPoint.X, y: elem.outPoint.Y}, {x: elem.inPoint.X, y: elem.inPoint.Y}];
-        select(this.ref)
+        select<SVGSVGElement, IVertex[]>(this.ref)
             .append('line')
+            .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
             .attr('out', elem.edge.vertexOne.name)
             .attr('in', elem.edge.vertexTwo.name)
@@ -113,11 +115,11 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .on('click', clickEdge);
         //let vertexOne = this.vertexOne;
         //let vertexTwo = this.vertexTwo;
-        function clickEdge(this: SVGLineElement) {
-           // this.vertexOne = this.getAttribute('out');
-           // this.vertexTwo = this.getAttribute('in');
-           // console.log(this.vertexOne);
-          //  console.log(this.vertexTwo);
+        function clickEdge(this: SVGLineElement, vertArr: IVertex[]) {
+            vertArr[0].rename(this.getAttribute('out'));
+            vertArr[1].rename(this.getAttribute('in'));
+            console.log(vertArr[0]);
+            console.log(vertArr[1]);
             let elemColour = select<SVGLineElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)') {
                 select<SVGLineElement, {}>(this)
@@ -131,8 +133,9 @@ export class ReadableAdapter extends Component<RAProps, State> {
     }
 
     addVertexToSVG(elem: GeometricVertex<Vertex>){
-        select<SVGSVGElement, {}>(this.ref)
+        select<SVGSVGElement, IVertex[]>(this.ref)
             .append('circle')
+            .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `vertex_${elem.label}`)
             .attr('cx', elem.center.X)
             .attr('cy', elem.center.Y)
@@ -142,7 +145,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke', '#000')
             .style('stroke-width', 5)
             .classed('dragging', true)
-            .call(d3.drag<SVGCircleElement, {}>().on('start', startDrag))
+            .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag))
             .on('click', clickVertex);
         select(this.ref)
             .append('text')
@@ -198,18 +201,16 @@ export class ReadableAdapter extends Component<RAProps, State> {
         //let vertexOne = this.vertexOne;
         //console.log("first"+this.vertexOne);
         //let vertexTwo = this.vertexTwo;
-        function clickVertex(this: SVGCircleElement) { //я хочу здесь в переменную сложить название вершины, по которой мы кликнули
-           /* if (!this.vertexOne) {                    //переменная - атрибут класса, ибо она так передастся в Writabl adapter
-                this.vertexOne = elem.getAttribute('label');  //но я не могу ничего вызвать через this, потому что  параметр этой функции называется this
-                                                              //это свзано c тем, что в 146 строке эта функция используется как обработчик событий
-
+        function clickVertex(this: SVGCircleElement, vertexArr: IVertex[]) {
+           if (!vertexArr[0]) {
+                vertexArr[0].rename(this.getAttribute('label'));
             }
-            if (!this.vertexTwo)
+            if (!vertexArr[1])
             {
-                this.vertexTwo = elem.getAttribute('label');
+                vertexArr[1].rename(this.getAttribute('label'));
             }
-            console.log(this.vertexOne);
-            console.log(this.vertexTwo); */
+            console.log(vertexArr[0]);
+            console.log(vertexArr[1]);
             let elemColour = select<SVGCircleElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)'){
                 select<SVGCircleElement, {}>(this)
@@ -233,6 +234,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
     }
 
     updateSvg() {
+        console.log(this.vertexOne);
+        console.log(this.vertexTwo);
         this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
         this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
         this.graphVisualizer.calculate();
@@ -279,6 +282,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             events: []
         };
         this.updateGraph = this.updateGraph.bind(this);
+        this.vertexOne = null;
+        this.vertexTwo = null;
     }
 
     updateGraph() {

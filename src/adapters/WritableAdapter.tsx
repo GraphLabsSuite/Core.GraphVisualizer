@@ -25,7 +25,7 @@ export class WritableAdapter extends ReadableAdapter{
         console.log('vert1'+this.vertexOne);
         console.log('vert2'+this.vertexTwo);
         if (this.vertexOne && this.vertexTwo){
-            const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne)], this.props.graph.vertices[Number(this.vertexTwo)]);
+            const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne.name)], this.props.graph.vertices[Number(this.vertexTwo.name)]);
             this.props.graph.addEdge(edge);
             this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
             const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
@@ -46,7 +46,7 @@ export class WritableAdapter extends ReadableAdapter{
         let elem: GeometricVertex<Vertex>;
         if (this.vertexOne) {
             for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
-                if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne){
+                if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne.name){
                     console.log(this.graphVisualizer.geometric.vertices[i].label);
                     console.log(this.props.graph.vertices[i].name);
                     const elem = this.graphVisualizer.geometric.vertices[i];
@@ -68,8 +68,8 @@ export class WritableAdapter extends ReadableAdapter{
         let elem: GeometricEdge<Edge>;
         for (let i=0;i<this.props.graph.edges.length;i++) {
             if (this.vertexOne && this.vertexTwo) {
-                if(this.props.graph.edges[i].vertexOne.name==this.vertexOne && this.props.graph.edges[i].vertexTwo.name==this.vertexTwo
-                || this.props.graph.edges[i].vertexOne.name==this.vertexTwo && this.props.graph.edges[i].vertexTwo.name==this.vertexOne){
+                if(this.props.graph.edges[i].vertexOne.name==this.vertexOne.name && this.props.graph.edges[i].vertexTwo.name==this.vertexTwo.name
+                || this.props.graph.edges[i].vertexOne.name==this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name==this.vertexOne.name) {
                     elem = this.graphVisualizer.geometric.edges[i];
                     this.removeEdgeFromSVG(elem);
                     this.updateSvg();
