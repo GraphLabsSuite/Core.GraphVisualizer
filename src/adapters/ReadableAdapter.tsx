@@ -282,8 +282,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             events: []
         };
         this.updateGraph = this.updateGraph.bind(this);
-        this.vertexOne = null;
-        this.vertexTwo = null;
+        this.vertexOne = new Vertex('');
+        this.vertexTwo = new Vertex('');
     }
 
     updateGraph() {
