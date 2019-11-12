@@ -24,7 +24,7 @@ export class WritableAdapter extends ReadableAdapter{
         super.addEdge();
         console.log('vert1'+this.vertexOne);
         console.log('vert2'+this.vertexTwo);
-        if (this.vertexOne && this.vertexTwo){
+        if (this.vertexOne.name != '' && this.vertexTwo.name != ''){
             const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne.name)], this.props.graph.vertices[Number(this.vertexTwo.name)]);
             this.props.graph.addEdge(edge);
             this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
@@ -34,8 +34,8 @@ export class WritableAdapter extends ReadableAdapter{
             //this.graphVisualizer.calculate();
             this.addEdgeToSVG(elem);
             this.updateSvg();
-            this.vertexOne = null;
-            this.vertexTwo = null;
+            this.vertexOne.rename('');
+            this.vertexTwo.rename('');
         }
     }
 
@@ -44,7 +44,7 @@ export class WritableAdapter extends ReadableAdapter{
         console.log('vert1'+this.vertexOne);
         //console.log(this.vertexTwo);
         let elem: GeometricVertex<Vertex>;
-        if (this.vertexOne) {
+        if (this.vertexOne.name != '') {
             for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
                 if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne.name){
                     console.log(this.graphVisualizer.geometric.vertices[i].label);
@@ -57,7 +57,7 @@ export class WritableAdapter extends ReadableAdapter{
                     //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
                     //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
                     //this.graphVisualizer.calculate();
-                    this.vertexOne = null;
+                    this.vertexOne.rename('');
                 }
             }
         }
@@ -67,7 +67,7 @@ export class WritableAdapter extends ReadableAdapter{
         super.removeEdge();
         let elem: GeometricEdge<Edge>;
         for (let i=0;i<this.props.graph.edges.length;i++) {
-            if (this.vertexOne && this.vertexTwo) {
+            if (this.vertexOne.name != '' && this.vertexTwo.name != '') {
                 if(this.props.graph.edges[i].vertexOne.name==this.vertexOne.name && this.props.graph.edges[i].vertexTwo.name==this.vertexTwo.name
                 || this.props.graph.edges[i].vertexOne.name==this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name==this.vertexOne.name) {
                     elem = this.graphVisualizer.geometric.edges[i];
@@ -81,8 +81,8 @@ export class WritableAdapter extends ReadableAdapter{
         //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
         //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
         //this.graphVisualizer.calculate();
-        this.vertexOne = null;
-        this.vertexTwo = null;
+        this.vertexOne.rename('');
+        this.vertexTwo.rename('');
     }
 
 
