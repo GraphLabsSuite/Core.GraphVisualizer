@@ -3,11 +3,9 @@ import {select, style} from 'd3-selection';
 import * as d3 from 'd3';
 import {Vertex, Edge, GraphSerializer, IEdge, IGraph, IVertex} from 'graphlabs.core.graphs';
 import {CircleGraphVisualizer, GeometricEdge, GeometricVertex} from '..';
-
 import { Component } from 'react';
-import { dispatch } from 'd3';
-import {svg} from "d3";
 
+import {svg} from "d3";
 export interface RAProps {
     className?: string;
     graph: IGraph<IVertex, IEdge>;
@@ -17,10 +15,13 @@ export interface State {
     events: Event[];
 }
 
+
 export class ReadableAdapter extends Component<RAProps, State> {
 
     public ref!: SVGSVGElement;
     public graphVisualizer!: CircleGraphVisualizer;
+    public vertexOne: IVertex;
+    public vertexTwo: IVertex;
 
    // private _graph!: IGraphView;
    /* get graph(): IGraphView {
@@ -35,13 +36,38 @@ export class ReadableAdapter extends Component<RAProps, State> {
         return this._graph;
     } */
 
-   public clickEdge(elem: SVGLineElement){
+   /* public clickVertex(elem: SVGCircleElement) {
+        if (this.vertexOne == null){
+            this.vertexOne = elem.getAttribute('label');
+        }
+        else {
+            this.vertexTwo = elem.getAttribute('label');
+        }
+        let elemColour = select<SVGCircleElement, {}>(elem).style("fill");
+        if (elemColour === 'rgb(255, 0, 0)'){
+            select<SVGCircleElement, {}>(elem)
+                .style('fill', '#eee');
+        }
+        else {
+            select<SVGCircleElement, {}>(elem)
+                .style('fill', '#ff0000');
+        }
+    }
 
-   }
-
-   public clickVertex(elem: SVGCircleElement){
-
-   }
+    public clickEdge(elem: SVGLineElement) {
+        this.vertexOne=elem.getAttribute('out');
+        this.vertexTwo=elem.getAttribute('in');
+        let elemColour = select<SVGLineElement, {}>(elem).style("fill");
+        if (elemColour === 'rgb(255, 0, 0)'){
+            select<SVGLineElement, {}>(elem)
+                .style('fill', '#000');
+        }
+        else {
+            select<SVGLineElement, {}>(elem)
+                .style('fill', '#ff0000');
+        }
+    }
+*/
 
    public  addVertex(){
 
@@ -73,8 +99,9 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     addEdgeToSVG(elem: GeometricEdge<Edge>){
         const data = [{x: elem.outPoint.X, y: elem.outPoint.Y}, {x: elem.inPoint.X, y: elem.inPoint.Y}];
-        select(this.ref)
+        select<SVGSVGElement, IVertex[]>(this.ref)
             .append('line')
+            .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
             .attr('out', elem.edge.vertexOne.name)
             .attr('in', elem.edge.vertexTwo.name)
@@ -85,12 +112,30 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke', 'black')
             .style('stroke-width', 5)
             .style('fill', 'none')
-            .on('click', this.clickEdge);
+            .on('click', clickEdge);
+        //let vertexOne = this.vertexOne;
+        //let vertexTwo = this.vertexTwo;
+        function clickEdge(this: SVGLineElement, vertArr: IVertex[]) {
+            vertArr[0].rename(this.getAttribute('out'));
+            vertArr[1].rename(this.getAttribute('in'));
+            console.log(vertArr[0]);
+            console.log(vertArr[1]);
+            let elemColour = select<SVGLineElement, {}>(this).style("fill");
+            if (elemColour === 'rgb(255, 0, 0)') {
+                select<SVGLineElement, {}>(this)
+                    .style('fill', '#000');
+            }
+            else {
+                select<SVGLineElement, {}>(this)
+                    .style('fill', '#ff0000');
+            }
+        }
     }
 
     addVertexToSVG(elem: GeometricVertex<Vertex>){
-        select<SVGSVGElement, {}>(this.ref)
+        select<SVGSVGElement, IVertex[]>(this.ref)
             .append('circle')
+            .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `vertex_${elem.label}`)
             .attr('cx', elem.center.X)
             .attr('cy', elem.center.Y)
@@ -100,8 +145,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke', '#000')
             .style('stroke-width', 5)
             .classed('dragging', true)
-            .call(d3.drag<SVGCircleElement, {}>().on('start', startDrag))
-            .on('click', this.clickVertex);
+            .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag))
+            .on('click', clickVertex);
         select(this.ref)
             .append('text')
             .attr('id', `label_${elem.label}`)
@@ -153,6 +198,29 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 circle.classed('dragging', false);
             }
         }
+        //let vertexOne = this.vertexOne;
+        //console.log("first"+this.vertexOne);
+        //let vertexTwo = this.vertexTwo;
+        function clickVertex(this: SVGCircleElement, vertexArr: IVertex[]) {
+           if (!vertexArr[0]) {
+                vertexArr[0].rename(this.getAttribute('label'));
+            }
+            if (!vertexArr[1])
+            {
+                vertexArr[1].rename(this.getAttribute('label'));
+            }
+            console.log(vertexArr[0]);
+            console.log(vertexArr[1]);
+            let elemColour = select<SVGCircleElement, {}>(this).style("fill");
+            if (elemColour === 'rgb(255, 0, 0)'){
+                select<SVGCircleElement, {}>(this)
+                    .style('fill', '#eee');
+            }
+            else {
+                select<SVGCircleElement, {}>(this)
+                    .style('fill', '#ff0000');
+            }
+        }
     }
 
     removeVertexFromSVG(elem: GeometricVertex<Vertex>){
@@ -166,6 +234,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
     }
 
     updateSvg() {
+        console.log(this.vertexOne);
+        console.log(this.vertexTwo);
         this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
         this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
         this.graphVisualizer.calculate();
@@ -212,6 +282,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             events: []
         };
         this.updateGraph = this.updateGraph.bind(this);
+        this.vertexOne = null;
+        this.vertexTwo = null;
     }
 
     updateGraph() {

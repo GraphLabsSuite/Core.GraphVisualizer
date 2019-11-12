@@ -7,40 +7,60 @@ import {GeometricEdge, GeometricVertex} from "..";
 
 export class WritableAdapter extends ReadableAdapter{
 
-    public vertexOne: string;
-    public vertexTwo: string;
-
     public addVertex() {
         super.addVertex();
         const vertex = new Vertex((this.props.graph.vertices.length).toString());
         this.props.graph.addVertex(vertex);
         this.graphVisualizer.geometric.vertices.push(new GeometricVertex(vertex));
         const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
+        //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+        //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+        //this.graphVisualizer.calculate();
         this.addVertexToSVG(elem);
+        this.updateSvg();
     }
 
     public addEdge() {
         super.addEdge();
+        console.log('vert1'+this.vertexOne);
+        console.log('vert2'+this.vertexTwo);
         if (this.vertexOne && this.vertexTwo){
-            const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne)], this.props.graph.vertices[Number(this.vertexTwo)]);
+            const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne.name)], this.props.graph.vertices[Number(this.vertexTwo.name)]);
             this.props.graph.addEdge(edge);
-            this.vertexOne = null;
-            this.vertexTwo = null;
             this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
             const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
+            //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+            //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+            //this.graphVisualizer.calculate();
             this.addEdgeToSVG(elem);
+            this.updateSvg();
+            this.vertexOne = null;
+            this.vertexTwo = null;
         }
     }
 
     public removeVertex() {
         super.removeVertex();
-        const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
-        if (this.vertexOne){
-            this.props.graph.removeVertex(this.props.graph.vertices[Number(this.vertexOne)]);
-            this.vertexOne = null;
+        console.log('vert1'+this.vertexOne);
+        //console.log(this.vertexTwo);
+        let elem: GeometricVertex<Vertex>;
+        if (this.vertexOne) {
+            for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
+                if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne.name){
+                    console.log(this.graphVisualizer.geometric.vertices[i].label);
+                    console.log(this.props.graph.vertices[i].name);
+                    const elem = this.graphVisualizer.geometric.vertices[i];
+                    this.removeVertexFromSVG(elem);
+                    this.updateSvg();
+                    this.props.graph.removeVertex(this.props.graph.vertices[i]);
+                    this.graphVisualizer.geometric.vertices.splice(i,1);
+                    //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+                    //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+                    //this.graphVisualizer.calculate();
+                    this.vertexOne = null;
+                }
+            }
         }
-        this.removeVertexFromSVG(elem);
-        this.graphVisualizer.geometric.vertices.pop();
     }
 
     public removeEdge() {
@@ -48,52 +68,24 @@ export class WritableAdapter extends ReadableAdapter{
         let elem: GeometricEdge<Edge>;
         for (let i=0;i<this.props.graph.edges.length;i++) {
             if (this.vertexOne && this.vertexTwo) {
-                if(this.props.graph.edges[i].vertexOne.name==this.vertexOne && this.props.graph.edges[i].vertexTwo.name==this.vertexTwo
-                || this.props.graph.edges[i].vertexOne.name==this.vertexTwo && this.props.graph.edges[i].vertexTwo.name==this.vertexOne){
+                if(this.props.graph.edges[i].vertexOne.name==this.vertexOne.name && this.props.graph.edges[i].vertexTwo.name==this.vertexTwo.name
+                || this.props.graph.edges[i].vertexOne.name==this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name==this.vertexOne.name) {
                     elem = this.graphVisualizer.geometric.edges[i];
+                    this.removeEdgeFromSVG(elem);
+                    this.updateSvg();
                     this.props.graph.removeEdge(this.props.graph.edges[i]);
                     this.graphVisualizer.geometric.edges.splice(i,1);
                 }
             }
         }
+        //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
+        //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
+        //this.graphVisualizer.calculate();
         this.vertexOne = null;
         this.vertexTwo = null;
-        this.removeEdgeFromSVG(elem);
     }
 
-    public clickVertex(elem: SVGCircleElement) {
-        super.clickVertex(elem);
-        if (this.vertexOne == null){
-            this.vertexOne = elem.getAttribute('label');
-        }
-        else {
-            this.vertexTwo = elem.getAttribute('label');
-        }
-        let elemColour = select<SVGCircleElement, {}>(elem).style("fill");
-        if (elemColour === 'rgb(255, 0, 0)'){
-            select<SVGCircleElement, {}>(elem)
-                .style('fill', '#eee');
-        }
-        else {
-            select<SVGCircleElement, {}>(elem)
-                .style('fill', '#ff0000');
-        }
-    }
 
-    public clickEdge(elem: SVGLineElement) {
-        super.clickEdge(elem);
-        this.vertexOne=elem.getAttribute('out');
-        this.vertexTwo=elem.getAttribute('in');
-        let elemColour = select<SVGLineElement, {}>(elem).style("fill");
-        if (elemColour === 'rgb(255, 0, 0)'){
-            select<SVGLineElement, {}>(elem)
-                .style('fill', '#000');
-        }
-        else {
-            select<SVGLineElement, {}>(elem)
-                .style('fill', '#ff0000');
-        }
-    }
 
 
 
