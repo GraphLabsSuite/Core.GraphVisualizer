@@ -6,7 +6,8 @@
     "noImplicitAny": true,
     "outDir": "build",
     "declaration": true,
-    "jsx": "react"
+    "jsx": "react",
+    "lib": ["dom", "es6"]
   },
   "include": [
     "src/**/*"
