@@ -202,10 +202,10 @@ export class ReadableAdapter extends Component<RAProps, State> {
         //console.log("first"+this.vertexOne);
         //let vertexTwo = this.vertexTwo;
         function clickVertex(this: SVGCircleElement, vertexArr: IVertex[]) {
-           if (!vertexArr[0]) {
+           if (vertexArr[0] == '') {
                 vertexArr[0].rename(this.getAttribute('label'));
             }
-            if (!vertexArr[1])
+            else if (vertexArr[1] == '')
             {
                 vertexArr[1].rename(this.getAttribute('label'));
             }
