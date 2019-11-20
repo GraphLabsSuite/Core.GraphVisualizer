@@ -42,25 +42,28 @@ export class WritableAdapter extends ReadableAdapter{
     public removeVertex() {
         super.removeVertex();
         console.log('vert1'+this.vertexOne);
-        //console.log(this.vertexTwo);
-        let elem: GeometricVertex<Vertex>;
+        let edges: GeometricEdge<Edge>[];
         if (this.vertexOne.name != '') {
-            for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
-                if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne.name){
-                    console.log(this.graphVisualizer.geometric.vertices[i].label);
+            for (let i = 0; i < this.props.graph.vertices.length; i++) {
+                if (this.props.graph.vertices[i].name == this.vertexOne.name){
                     console.log(this.props.graph.vertices[i].name);
-                    const elem = this.graphVisualizer.geometric.vertices[i];
-                    this.removeVertexFromSVG(elem);
-                    this.updateSvg();
+                    this.removeVertexFromSVG(this.graphVisualizer.geometric.vertices[i]);
+                    for (let j = 0; j < this.props.graph.edges.length; j++) {
+                        if(this.props.graph.edges[j].vertexOne.name==this.vertexOne.name || this.props.graph.edges[j].vertexTwo.name==this.vertexOne.name) {
+                            //edges.push(this.graphVisualizer.geometric.edges[j]);
+                            this.removeEdgeFromSVG(this.graphVisualizer.geometric.edges[j]);
+                            this.props.graph.removeEdge(this.props.graph.edges[j]);
+                            this.graphVisualizer.geometric.edges.splice(j,1);
+                        }
+                    }
                     this.props.graph.removeVertex(this.props.graph.vertices[i]);
                     this.graphVisualizer.geometric.vertices.splice(i,1);
-                    //this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
-                    //this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
-                    //this.graphVisualizer.calculate();
+                    this.updateSvg();
+                    }
                     this.vertexOne.rename('');
                 }
             }
-        }
+
     }
 
     public removeEdge() {
@@ -72,9 +75,9 @@ export class WritableAdapter extends ReadableAdapter{
                 || this.props.graph.edges[i].vertexOne.name==this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name==this.vertexOne.name) {
                     elem = this.graphVisualizer.geometric.edges[i];
                     this.removeEdgeFromSVG(elem);
-                    this.updateSvg();
                     this.props.graph.removeEdge(this.props.graph.edges[i]);
                     this.graphVisualizer.geometric.edges.splice(i,1);
+                    this.updateSvg();
                 }
             }
         }
@@ -84,9 +87,5 @@ export class WritableAdapter extends ReadableAdapter{
         this.vertexOne.rename('');
         this.vertexTwo.rename('');
     }
-
-
-
-
 
 }

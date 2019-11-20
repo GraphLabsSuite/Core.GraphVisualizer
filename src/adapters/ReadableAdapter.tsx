@@ -15,7 +15,6 @@ export interface State {
     events: Event[];
 }
 
-
 export class ReadableAdapter extends Component<RAProps, State> {
 
     public ref!: SVGSVGElement;
@@ -225,6 +224,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     removeVertexFromSVG(elem: GeometricVertex<Vertex>){
         select(`#vertex_${elem.label}`)
+            .remove();
+        select(`#label_${elem.label}`)
             .remove();
     }
 
