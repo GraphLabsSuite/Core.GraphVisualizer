@@ -85,6 +85,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
    }
 
     renderSvg() {
+       console.log(this.graphVisualizer);
         this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
         this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
         this.graphVisualizer.calculate();
@@ -97,6 +98,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
     }
 
     addEdgeToSVG(elem: GeometricEdge<Edge>){
+        console.log(this.graphVisualizer);
         const data = [{x: elem.outPoint.X, y: elem.outPoint.Y}, {x: elem.inPoint.X, y: elem.inPoint.Y}];
         select<SVGSVGElement, IVertex[]>(this.ref)
             .append('line')
@@ -132,6 +134,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
     }
 
     addVertexToSVG(elem: GeometricVertex<Vertex>){
+        console.log(this.graphVisualizer);
         select<SVGSVGElement, IVertex[]>(this.ref)
             .append('circle')
             .datum([this.vertexOne, this.vertexTwo])
@@ -223,6 +226,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
     }
 
     removeVertexFromSVG(elem: GeometricVertex<Vertex>){
+        console.log(this.graphVisualizer);
         select(`#vertex_${elem.label}`)
             .remove();
         select(`#label_${elem.label}`)
@@ -230,6 +234,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
     }
 
     removeEdgeFromSVG(elem: GeometricEdge<Edge>){
+        console.log(this.graphVisualizer);
        select(`#edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
            .remove();
     }
@@ -268,14 +273,14 @@ export class ReadableAdapter extends Component<RAProps, State> {
         window.onresize = this.updateSvg.bind(this);
     }
 
-    componentWillReceiveProps(nextProps: RAProps){
+    /*componentWillReceiveProps(nextProps: RAProps){
         if(nextProps.graph !== this.props.graph){
             this.graphVisualizer = new CircleGraphVisualizer(nextProps.graph);
             this.graphVisualizer.width = this.ref.getBoundingClientRect().width;
             this.graphVisualizer.height = this.ref.getBoundingClientRect().height;
             this.graphVisualizer.calculate();
         }
-    }
+    }*/
 
     constructor(props: RAProps) {
         super(props);
