@@ -49,7 +49,7 @@ export class WritableAdapter extends ReadableAdapter{
         console.log(this.graphVisualizer);
         super.removeVertex();
         console.log('vert1'+this.vertexOne);
-        let edges: GeometricEdge<Edge>[];
+        let edges: GeometricEdge<Edge>[] = [];
         if (this.vertexOne.name != '') {
             for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
                 if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne.name) {
@@ -60,11 +60,13 @@ export class WritableAdapter extends ReadableAdapter{
                             edges.push(elem);
                         }
                     }
-                    for (let k = 0; k < edges.length; k++) {
-                        this.removeEdgeFromSVG(edges[k]);
-                        this.props.graph.removeEdge(edges[k].edge);
-                        this.graphVisualizer.geometric.edges.splice(this.graphVisualizer.geometric.edges.indexOf(edges[k],0),1);
-                        this.updateSvg();
+                    if (edges.length != 0) {
+                        for (let k = 0; k < edges.length; k++) {
+                            this.removeEdgeFromSVG(edges[k]);
+                            this.props.graph.removeEdge(edges[k].edge);
+                            this.graphVisualizer.geometric.edges.splice(this.graphVisualizer.geometric.edges.indexOf(edges[k], 0), 1);
+                            this.updateSvg();
+                        }
                     }
                     this.removeVertexFromSVG(this.graphVisualizer.geometric.vertices[i]);
                     this.props.graph.removeVertex(this.props.graph.vertices[i]);
