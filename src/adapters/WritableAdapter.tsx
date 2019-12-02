@@ -34,7 +34,7 @@ export class WritableAdapter extends ReadableAdapter{
                 vertNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
             }
             let maxNum = Math.max.apply(null,vertNumbers);*/
-            const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne.name)], this.props.graph.vertices[Number(this.vertexTwo.name)]);
+            const edge = new Edge(this.vertexOne, this.vertexTwo);
             this.props.graph.addEdge(edge);
             this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
             const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
