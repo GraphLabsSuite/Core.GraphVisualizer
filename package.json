@@ -1,7 +1,7 @@
 {
   "name": "graphlabs.core.visualizer",
   "description": "GraphLabs Visualizer for graphs in the module",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "author": "GraphLabs",
   "keywords": [
     "graphlabs",
