@@ -1,7 +1,7 @@
 {
   "name": "graphlabs.core.visualizer",
   "description": "GraphLabs Visualizer for graphs in the module",
-  "version": "0.0.41-0",
+  "version": "0.0.42",
   "author": "GraphLabs",
   "keywords": [
     "graphlabs",
@@ -20,7 +20,7 @@
     "@types/d3": "^5.7.2",
     "@types/react": "^16.9.2",
     "d3": "^5.12.0",
-    "graphlabs.core.graphs": "0.1.0-0",
+    "graphlabs.core.graphs": "^0.0.33",
     "react": "^16.9.0",
     "typescript": "^3.7.0"
   },

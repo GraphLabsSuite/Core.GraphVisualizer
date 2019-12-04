@@ -34,7 +34,7 @@ export class WritableAdapter extends ReadableAdapter{
                 vertNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
             }
             let maxNum = Math.max.apply(null,vertNumbers);*/
-            const edge = new Edge(this.props.graph.vertices[Number(this.vertexOne.name)], this.props.graph.vertices[Number(this.vertexTwo.name)]);
+            const edge = new Edge(this.vertexOne, this.vertexTwo);
             this.props.graph.addEdge(edge);
             this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
             const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
@@ -49,16 +49,22 @@ export class WritableAdapter extends ReadableAdapter{
         console.log(this.graphVisualizer);
         super.removeVertex();
         console.log('vert1'+this.vertexOne);
-        let edges: GeometricEdge<Edge>[];
+        let edges: GeometricEdge<Edge>[] = [];
         if (this.vertexOne.name != '') {
             for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
-                if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne.name){
+                if (this.graphVisualizer.geometric.vertices[i].label == this.vertexOne.name) {
                     console.log(this.props.graph.vertices[i].name);
                     for (let j = 0; j < this.graphVisualizer.geometric.edges.length; j++) {
                         if(this.graphVisualizer.geometric.edges[j].edge.vertexOne.name==this.vertexOne.name || this.graphVisualizer.geometric.edges[j].edge.vertexTwo.name==this.vertexOne.name) {
-                            this.removeEdgeFromSVG(this.graphVisualizer.geometric.edges[j]);
-                            this.props.graph.removeEdge(this.props.graph.edges[j]);
-                            this.graphVisualizer.geometric.edges.splice(j,1);
+                            let elem = this.graphVisualizer.geometric.edges[j];
+                            edges.push(elem);
+                        }
+                    }
+                    if (edges.length != 0) {
+                        for (let k = 0; k < edges.length; k++) {
+                            this.removeEdgeFromSVG(edges[k]);
+                            this.props.graph.removeEdge(edges[k].edge);
+                            this.graphVisualizer.geometric.edges.splice(this.graphVisualizer.geometric.edges.indexOf(edges[k], 0), 1);
                             this.updateSvg();
                         }
                     }
