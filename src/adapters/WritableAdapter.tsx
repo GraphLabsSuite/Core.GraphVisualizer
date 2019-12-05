@@ -18,8 +18,8 @@ export class WritableAdapter extends ReadableAdapter{
         const vertex = new Vertex((maxNum+1).toString());
         this.props.graph.addVertex(vertex);
         this.graphVisualizer.geometric.vertices.push(new GeometricVertex(vertex));
-        const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
-        this.addVertexToSVG(elem);
+        // const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
+        this.addVertexToSVG(new GeometricVertex<Vertex>(vertex));
         this.updateSvg();
     }
 
@@ -34,11 +34,12 @@ export class WritableAdapter extends ReadableAdapter{
                 vertNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
             }
             let maxNum = Math.max.apply(null,vertNumbers);*/
-            const edge = new Edge(this.vertexOne, this.vertexTwo);
+            const edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
+            console.log(edge);
             this.props.graph.addEdge(edge);
             this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
-            const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
-            this.addEdgeToSVG(elem);
+            // const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
+            this.addEdgeToSVG(new GeometricEdge(edge));
             this.updateSvg();
             this.vertexOne.rename('');
             this.vertexTwo.rename('');
