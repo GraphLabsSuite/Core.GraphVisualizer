@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ReadableAdapter} from "./ReadableAdapter";
 import {select} from "d3-selection";
 import * as d3 from 'd3';
-import {Vertex, Edge} from "graphlabs.core.graphs";
+import {IVertex, Vertex, Edge} from "graphlabs.core.graphs";
 import {GeometricEdge, GeometricVertex} from "..";
 
 export class WritableAdapter extends ReadableAdapter{
@@ -10,12 +10,18 @@ export class WritableAdapter extends ReadableAdapter{
     public addVertex() {
         console.log(this.graphVisualizer);
         super.addVertex();
-        let vertNumbers = [];
-        for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++){
-            vertNumbers[i] = Number(this.graphVisualizer.geometric.vertices[i].vertex.name);
+        let vertex: Vertex;
+        if (this.graphVisualizer.geometric.vertices.length != 0) {
+            let vertNumbers = [];
+            for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
+                vertNumbers[i] = Number(this.graphVisualizer.geometric.vertices[i].vertex.name);
+            }
+            let maxNum = Math.max.apply(null, vertNumbers);
+            vertex = new Vertex((maxNum + 1).toString());
         }
-        let maxNum = Math.max.apply(null,vertNumbers);
-        const vertex = new Vertex((maxNum+1).toString());
+        else {
+            vertex = new Vertex('0');
+        }
         this.props.graph.addVertex(vertex);
         this.graphVisualizer.geometric.vertices.push(new GeometricVertex(vertex));
         // const elem = this.graphVisualizer.geometric.vertices[this.props.graph.vertices.length-1];
