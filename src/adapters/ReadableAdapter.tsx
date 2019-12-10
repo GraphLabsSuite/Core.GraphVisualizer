@@ -103,6 +103,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .append('line')
             .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+            //   .attr('name', elem.edge.name,  )
             .attr('out', elem.edge.vertexOne.name)
             .attr('in', elem.edge.vertexTwo.name)
             .attr('x1', data[0].x)
@@ -113,6 +114,26 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke-width', 5)
             .style('fill', 'none')
             .on('click', clickEdge);
+
+        console.log("Place_1 " + this.ref['id'] + ' ' + data[0].x + ' ' + data[0].y);
+        console.log("Place_2 " + this.ref.getElementById('line') + ' ' + data[1].x + ' ' + data[1].y);
+        //arrow
+        select(this.ref)
+            .append("svg:marker")
+            .attr("id", "triangle")
+            //.attr("refX", 0)
+            //.attr("refY", 15)
+            .attr("refX", data[0].x)
+            .attr("refY", data[0].y)
+            .attr("markerWidth", 15)
+            .attr("markerHeight", 15)
+            .attr("markerUnits","userSpaceOnUse")
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M 0 0 12 6 0 12 3 6")
+            .style("fill", "black");
+        console.log("PlaceA " + this.ref.getElementById("svg:marker") + ' ' + data[0].x + ' ' + data[0].y);
+
         //let vertexOne = this.vertexOne;
         //let vertexTwo = this.vertexTwo;
         function clickEdge(this: SVGLineElement, vertArr: IVertex[]) {

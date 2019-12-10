@@ -16,7 +16,8 @@ export class GeometricEdge<T extends Edge> {
 
   public outPoint: Point = new Point(0,0);
 
-  public constructor(edge: T) {
+  public constructor(edge: T, shape: EdgeShape) {
     this.edge = edge;
+    this.shape = shape;
   }
 }
