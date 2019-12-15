@@ -204,23 +204,30 @@ export class ReadableAdapter extends Component<RAProps, State> {
         //console.log("first"+this.vertexOne);
         //let vertexTwo = this.vertexTwo;
         function clickVertex(this: SVGCircleElement, vertexArr: IVertex[]) {
-           if (vertexArr[0].name == '') {
-                vertexArr[0].rename(this.getAttribute('label'));
-            }
-            else if (vertexArr[1].name == '')
-            {
-                vertexArr[1].rename(this.getAttribute('label'));
-            }
-            console.log(vertexArr[0]);
-            console.log(vertexArr[1]);
             let elemColour = select<SVGCircleElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)'){
                 select<SVGCircleElement, {}>(this)
                     .style('fill', '#eee');
+                if (this.getAttribute('label') == vertexArr[0].name) {
+                    vertexArr[0].rename('');
+                }
+                else if (this.getAttribute('label') == vertexArr[1].name) {
+                    vertexArr[1].rename('');
+                }
             }
             else {
                 select<SVGCircleElement, {}>(this)
                     .style('fill', '#ff0000');
+                if (vertexArr[0].name == '') {
+                    vertexArr[0].rename(this.getAttribute('label'));
+                }
+                else if (vertexArr[1].name == '') {
+                    vertexArr[1].rename(this.getAttribute('label'));
+                }
+                else if (vertexArr[0].name !== '' && vertexArr[1].name !== '') {
+                    vertexArr[1].rename('');
+                    vertexArr[0].rename(this.getAttribute('label'));
+                }
             }
         }
     }
@@ -249,8 +256,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             select(`#vertex_${elem.label}`)
                 .attr('cx', elem.center.X)
                 .attr('cy', elem.center.Y)
-                .attr('fill', 'black')
-                .attr('r', elem.radius);
+                .attr('r', elem.radius)
+                .style('fill', '#eee');
             select(`#label_${elem.label}`)
                 .attr('x', elem.center.X)
                 .attr('y', elem.center.Y + elem.radius / 4)
