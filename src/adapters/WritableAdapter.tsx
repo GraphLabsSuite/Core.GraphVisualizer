@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ReadableAdapter} from "./ReadableAdapter";
 import {select} from "d3-selection";
 import * as d3 from 'd3';
-import {IVertex, Vertex, Edge} from "graphlabs.core.graphs";
+import {IVertex, Vertex, Edge, IEdge} from "graphlabs.core.graphs";
 import {GeometricEdge, GeometricVertex} from "..";
 
 export class WritableAdapter extends ReadableAdapter{
@@ -40,13 +40,25 @@ export class WritableAdapter extends ReadableAdapter{
                 vertNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
             }
             let maxNum = Math.max.apply(null,vertNumbers);*/
-            const edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
-            console.log(edge);
-            this.props.graph.addEdge(edge);
-            this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
-            // const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
-            this.addEdgeToSVG(new GeometricEdge(edge));
-            this.updateSvg();
+            let isRepeated: boolean;
+            for (let i=0;i<this.props.graph.edges.length;i++) {
+                    if(this.props.graph.edges[i].vertexOne.name==this.vertexOne.name && this.props.graph.edges[i].vertexTwo.name==this.vertexTwo.name
+                        || this.props.graph.edges[i].vertexOne.name==this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name==this.vertexOne.name) {
+                        isRepeated = true;
+                    }
+            }
+            if (isRepeated == true) {
+                console.log("Repeated item!");
+            }
+            else {
+                const edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
+                console.log(edge);
+                this.props.graph.addEdge(edge);
+                this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
+                // const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
+                this.addEdgeToSVG(new GeometricEdge(edge));
+                this.updateSvg();
+            }
             this.vertexOne.rename('');
             this.vertexTwo.rename('');
         }
