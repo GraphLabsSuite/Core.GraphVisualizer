@@ -16,7 +16,10 @@ export class GeometricEdge<T extends Edge> {
 
   public outPoint: Point = new Point(0,0);
 
+  public label: string;
+
   public constructor(edge: T) {
     this.edge = edge;
+    this.label = edge.name;
   }
 }
