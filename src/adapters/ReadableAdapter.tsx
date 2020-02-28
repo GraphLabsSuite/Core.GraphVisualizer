@@ -56,7 +56,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
     addEdgeToSVG(elem: GeometricEdge<Edge>) {
         console.log(this.graphVisualizer);
         const data = [{x: elem.outPoint.X, y: elem.outPoint.Y}, {x: elem.inPoint.X, y: elem.inPoint.Y}];
-        select<SVGSVGElement, IVertex[]>(this.ref)
+        select<SVGSVGElement, IEdge[]>(this.ref)
             .append('line')
             .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
@@ -74,12 +74,12 @@ export class ReadableAdapter extends Component<RAProps, State> {
         if (this.props.namedEdges == true) {
             select(this.ref)
                 .append('text')
-                .attr('id', `label_${elem.label}`)
+                .attr('id', `label2_${elem.label}`)
                 .attr('x', (data[0].x + data[1].x) / 2)
                 .attr('y', ((data[0].y + data[1].y) / 2) + 15)
                 .text(elem.label)
                 .style('fill', '#000')
-                .style('font-size', '11px')
+                .style('font-size', '14px')
                 .style('font-family', 'sans-serif')
                 .style('text-anchor', 'middle');
         }
@@ -207,7 +207,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
         console.log(this.graphVisualizer);
         select(`#edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
             .remove();
-        select(`#label_${elem.label}`)
+        select(`#label2_${elem.label}`)
             .remove();
     }
 
@@ -235,7 +235,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .attr('y1', elem.outPoint.Y)
                 .attr('y2', elem.inPoint.Y);
             if (this.props.namedEdges == true) {
-                select(`#label_${elem.label}`)
+                select(`#label2_${elem.label}`)
                     .attr('x', (elem.outPoint.X + elem.inPoint.X) / 2)
                     .attr('y', ((elem.outPoint.Y + elem.inPoint.Y) / 2) + 15);
             }
