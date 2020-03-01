@@ -130,6 +130,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('user-select', 'none')
             .style('pointer-events', 'none');
         const referrer = this.ref;
+        const isNamedEdges = this.props.namedEdges;
 
         function startDrag(this: SVGCircleElement) {
             const circle = d3.select(this).classed('dragging', true);
@@ -153,11 +154,21 @@ export class ReadableAdapter extends Component<RAProps, State> {
                             select(this)
                                 .attr('x1', d3.event.x)
                                 .attr('y1', d3.event.y);
+                            if (isNamedEdges == true) {
+                                select(`#label2_${d3.select(this).attr('label')}`)
+                                    .attr('x', (d3.event.x + Number(d3.select(this).attr('x2'))) / 2)
+                                    .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
+                            }
                         }
                         if (`vertex_${d3.select(this).attr('in')}` === name) {
                             select(this)
                                 .attr('x2', d3.event.x)
                                 .attr('y2', d3.event.y);
+                            if (isNamedEdges == true) {
+                                select(`#label2_${d3.select(this).attr('label')}`)
+                                    .attr('x', (d3.event.x + Number(d3.select(this).attr('x1'))) / 2)
+                                    .attr('y', ((d3.event.y + Number(d3.select(this).attr('y1'))) / 2) + 15);
+                            }
                         }
                     });
                 }
