@@ -11,15 +11,26 @@ export class WritableAdapter extends ReadableAdapter {
         console.log(this.graphVisualizer);
         super.addVertex();
         let vertex: Vertex;
-        if (this.graphVisualizer.geometric.vertices.length != 0) {
-            let vertNumbers = [];
-            for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
-                vertNumbers[i] = Number(this.graphVisualizer.geometric.vertices[i].vertex.name);
+        if (this.props.vertexNaming == true){
+            let vertName = prompt('Enter the name of the vertex','');
+            if (vertName !== '' && vertName !== null){
+                vertex = new Vertex(vertName);
             }
-            let maxNum = Math.max.apply(null, vertNumbers);
-            vertex = new Vertex((maxNum + 1).toString());
-        } else {
-            vertex = new Vertex('0');
+            else {
+                return;
+            }
+        }
+        else {
+            if (this.graphVisualizer.geometric.vertices.length != 0) {
+                let vertNumbers = [];
+                for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
+                    vertNumbers[i] = Number(this.graphVisualizer.geometric.vertices[i].vertex.name);
+                }
+                let maxNum = Math.max.apply(null, vertNumbers);
+                vertex = new Vertex((maxNum + 1).toString());
+            } else {
+                vertex = new Vertex('0');
+            }
         }
         this.props.graph.addVertex(vertex);
         this.graphVisualizer.geometric.vertices.push(new GeometricVertex(vertex));

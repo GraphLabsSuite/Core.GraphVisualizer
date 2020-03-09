@@ -11,6 +11,7 @@ export interface RAProps {
     className?: string;
     graph: IGraph<IVertex, IEdge>;
     namedEdges?: boolean;
+    vertexNaming?: boolean;
 }
 
 export interface State {
