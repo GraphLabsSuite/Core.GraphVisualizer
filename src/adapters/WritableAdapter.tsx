@@ -135,6 +135,7 @@ export class WritableAdapter extends ReadableAdapter {
                 }
             }
         }
+        this.updateSvg();
         this.vertexOne.rename('');
         this.vertexTwo.rename('');
     }

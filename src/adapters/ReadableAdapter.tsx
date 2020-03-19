@@ -12,6 +12,7 @@ export interface RAProps {
     graph: IGraph<IVertex, IEdge>;
     namedEdges?: boolean;
     vertexNaming?: boolean;
+    withoutDragging?: boolean;
 }
 
 export interface State {
@@ -103,7 +104,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     addVertexToSVG(elem: GeometricVertex<Vertex>) {
         console.log(this.graphVisualizer);
-        select<SVGSVGElement, IVertex[]>(this.ref)
+        let createVertex =  select<SVGSVGElement, IVertex[]>(this.ref)
             .append('circle')
             .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `vertex_${elem.label}`)
@@ -114,9 +115,12 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('fill', '#eee')
             .style('stroke', '#000')
             .style('stroke-width', 5)
-            .classed('dragging', true)
-            .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag))
             .on('click', clickVertex);
+        if (this.props.withoutDragging !== true){
+            createVertex
+                .classed('dragging', true)
+                .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag));
+        }
         select(this.ref)
             .append('text')
             .attr('id', `label_${elem.label}`)
