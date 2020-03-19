@@ -104,35 +104,22 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     addVertexToSVG(elem: GeometricVertex<Vertex>) {
         console.log(this.graphVisualizer);
-        if (this.props.withoutDragging == true){
-            select<SVGSVGElement, IVertex[]>(this.ref)
-                .append('circle')
-                .datum([this.vertexOne, this.vertexTwo])
-                .attr('id', `vertex_${elem.label}`)
-                .attr('cx', elem.center.X)
-                .attr('cy', elem.center.Y)
-                .attr('label', elem.label)
-                .attr('r', elem.radius)
-                .style('fill', '#eee')
-                .style('stroke', '#000')
-                .style('stroke-width', 5)
-                .on('click', clickVertex);
-        }
-        else {
-            select<SVGSVGElement, IVertex[]>(this.ref)
-                .append('circle')
-                .datum([this.vertexOne, this.vertexTwo])
-                .attr('id', `vertex_${elem.label}`)
-                .attr('cx', elem.center.X)
-                .attr('cy', elem.center.Y)
-                .attr('label', elem.label)
-                .attr('r', elem.radius)
-                .style('fill', '#eee')
-                .style('stroke', '#000')
-                .style('stroke-width', 5)
+        let createVertex =  select<SVGSVGElement, IVertex[]>(this.ref)
+            .append('circle')
+            .datum([this.vertexOne, this.vertexTwo])
+            .attr('id', `vertex_${elem.label}`)
+            .attr('cx', elem.center.X)
+            .attr('cy', elem.center.Y)
+            .attr('label', elem.label)
+            .attr('r', elem.radius)
+            .style('fill', '#eee')
+            .style('stroke', '#000')
+            .style('stroke-width', 5)
+            .on('click', clickVertex);
+        if (this.props.withoutDragging !== true){
+            createVertex
                 .classed('dragging', true)
-                .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag))
-                .on('click', clickVertex);
+                .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag));
         }
         select(this.ref)
             .append('text')
