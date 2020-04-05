@@ -11,16 +11,14 @@ export class WritableAdapter extends ReadableAdapter {
         console.log(this.graphVisualizer);
         super.addVertex();
         let vertex: Vertex;
-        if (this.props.vertexNaming == true){
-            let vertName = prompt('Enter the name of the vertex','');
-            if (vertName !== '' && vertName !== null){
+        if (this.props.vertexNaming == true) {
+            let vertName = prompt('Enter the name of the vertex', '');
+            if (vertName !== '' && vertName !== null) {
                 vertex = new Vertex(vertName);
-            }
-            else {
+            } else {
                 return;
             }
-        }
-        else {
+        } else {
             if (this.graphVisualizer.geometric.vertices.length != 0) {
                 let vertNumbers = [];
                 for (let i = 0; i < this.graphVisualizer.geometric.vertices.length; i++) {
@@ -43,47 +41,57 @@ export class WritableAdapter extends ReadableAdapter {
         super.addEdge();
         console.log('vert1' + this.vertexOne);
         console.log('vert2' + this.vertexTwo);
-        if (this.vertexOne.name != '' && this.vertexTwo.name != '') {
-            /*let vertNumbers = [];
-            for (let i = 0; i < this.graphVisualizer.geometric.edges.length; i++){
-                vertNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
-            }
-            let maxNum = Math.max.apply(null,vertNumbers);*/
-            let isRepeated: boolean;
-            for (let i = 0; i < this.props.graph.edges.length; i++) {
-                if (this.props.graph.edges[i].vertexOne.name == this.vertexOne.name && this.props.graph.edges[i].vertexTwo.name == this.vertexTwo.name
-                    || this.props.graph.edges[i].vertexOne.name == this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name == this.vertexOne.name) {
-                    isRepeated = true;
+        let edge: Edge;
+        if (this.props.edgeNaming === true) {
+            let edgeName = prompt('Enter the name of the edge', '');
+            if (edgeName !== '' && edgeName !== null) {
+                if (this.vertexOne.name != '' && this.vertexTwo.name != '') {
+                    edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), edgeName);
+                    console.log(edge);
+                    this.props.graph.addEdge(edge);
+                    this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
+                    this.addEdgeToSVG(new GeometricEdge(edge));
+                    this.updateSvg();
                 }
-            }
-            if (isRepeated == true) {
-                console.log("Repeated item!");
             } else {
-                let edge;
-                if (this.props.namedEdges == true) {
-                    if (this.graphVisualizer.geometric.edges.length != 0) {
-                        let edgeNumbers = [];
-                        for (let i = 0; i < this.graphVisualizer.geometric.edges.length; i++) {
-                            edgeNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
-                        }
-                        let maxNum = Math.max.apply(null, edgeNumbers);
-                        edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), (maxNum + 1).toString());
-                    } else {
-                        edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), '0');
-                    }
-                } else {
-                    edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
-                }
-                console.log(edge);
-                this.props.graph.addEdge(edge);
-                this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
-                // const elem = this.graphVisualizer.geometric.edges[this.props.graph.edges.length-1];
-                this.addEdgeToSVG(new GeometricEdge(edge));
-                this.updateSvg();
+                return;
             }
+        } else {
+            if (this.vertexOne.name != '' && this.vertexTwo.name != '') {
+                let isRepeated: boolean;
+                for (let i = 0; i < this.props.graph.edges.length; i++) {
+                    if (this.props.graph.edges[i].vertexOne.name == this.vertexOne.name && this.props.graph.edges[i].vertexTwo.name == this.vertexTwo.name
+                        || this.props.graph.edges[i].vertexOne.name == this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name == this.vertexOne.name) {
+                        isRepeated = true;
+                    }
+                }
+                if (isRepeated == true) {
+                    console.log("Repeated item!");
+                } else {
+                    if (this.props.namedEdges == true) {
+                        if (this.graphVisualizer.geometric.edges.length != 0) {
+                            let edgeNumbers = [];
+                            for (let i = 0; i < this.graphVisualizer.geometric.edges.length; i++) {
+                                edgeNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
+                            }
+                            let maxNum = Math.max.apply(null, edgeNumbers);
+                            edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), (maxNum + 1).toString());
+                        } else {
+                            edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), '0');
+                        }
+                    } else {
+                        edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
+                    }
+                    console.log(edge);
+                    this.props.graph.addEdge(edge);
+                    this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
+                    this.addEdgeToSVG(new GeometricEdge(edge));
+                    this.updateSvg();
+                }
+            }
+        }
             this.vertexOne.rename('');
             this.vertexTwo.rename('');
-        }
     }
 
     public removeVertex() {

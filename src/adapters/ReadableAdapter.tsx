@@ -13,6 +13,7 @@ export interface RAProps {
     namedEdges?: boolean;
     vertexNaming?: boolean;
     withoutDragging?: boolean;
+    edgeNaming?: boolean;
 }
 
 export interface State {
