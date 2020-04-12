@@ -92,13 +92,13 @@ export class ReadableAdapter extends Component<RAProps, State> {
             vertArr[1].rename(this.getAttribute('in'));
             console.log(vertArr[0]);
             console.log(vertArr[1]);
-            let elemColour = select<SVGLineElement, {}>(this).style("fill");
-            if (elemColour === 'rgb(255, 0, 0)') {
+            let elemColour = select<SVGLineElement, {}>(this).style("stroke");
+            if (elemColour === 'black') {
                 select<SVGLineElement, {}>(this)
-                    .style('fill', '#000');
+                    .style('stroke', 'green');
             } else {
                 select<SVGLineElement, {}>(this)
-                    .style('fill', '#ff0000');
+                    .style('stroke', 'black');
             }
         }
     }
