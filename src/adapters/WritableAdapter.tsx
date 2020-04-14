@@ -14,7 +14,12 @@ export class WritableAdapter extends ReadableAdapter {
         if (this.props.vertexNaming == true) {
             let vertName = prompt('Enter the name of the vertex', '');
             if (vertName !== '' && vertName !== null) {
-                vertex = new Vertex(vertName);
+                if (vertName !== '_') {
+                    vertex = new Vertex(vertName);
+                }
+                else {
+                    vertex = new Vertex(vertName+this.graphVisualizer.geometric.vertices.length);
+                }
             } else {
                 return;
             }
