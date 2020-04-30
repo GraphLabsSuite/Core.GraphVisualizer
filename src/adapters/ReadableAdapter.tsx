@@ -2,7 +2,7 @@ import * as React from 'react';
 import {select, style} from 'd3-selection';
 import * as d3 from 'd3';
 import {Vertex, Edge, IEdge, IGraph, IVertex} from 'graphlabs.core.graphs';
-import {CircleGraphVisualizer, GeometricEdge, GeometricVertex} from '..';
+import {CircleGraphVisualizer, GeometricEdge, GeometricVertex, store, SET_ACTION, appActionCreators} from '..';
 import {Component} from 'react';
 
 import {svg} from "d3";
@@ -88,10 +88,12 @@ export class ReadableAdapter extends Component<RAProps, State> {
         }
 
         function clickEdge(this: SVGLineElement, vertArr: IVertex[]) {
-            vertArr[0].rename(this.getAttribute('out'));
-            vertArr[1].rename(this.getAttribute('in'));
-            console.log(vertArr[0]);
-            console.log(vertArr[1]);
+            const action = {
+            type: 'edge',
+            out: this.getAttribute('out'),
+            in: this.getAttribute('in'),
+            };
+            store.dispatch(appActionCreators.setAction(action));
             let elemColour = select<SVGLineElement, {}>(this).style("stroke");
             if (elemColour === 'black') {
                 select<SVGLineElement, {}>(this)
