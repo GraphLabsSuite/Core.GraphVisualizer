@@ -65,6 +65,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .attr('id', `edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
             .attr('out', elem.edge.vertexOne.name)
             .attr('in', elem.edge.vertexTwo.name)
+            .attr('graph-id', this.graphVisualizer.geometric.graphId)
             .attr('label', elem.label)
             .attr('x1', data[0].x)
             .attr('x2', data[1].x)
@@ -109,6 +110,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .append('circle')
             .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `vertex_${elem.label}`)
+            .attr('graph-id', this.graphVisualizer.geometric.graphId)
             .attr('cx', elem.center.X)
             .attr('cy', elem.center.Y)
             .attr('label', elem.label)
@@ -153,12 +155,13 @@ export class ReadableAdapter extends Component<RAProps, State> {
                     circle.raise().attr('cx', d3.event.x).attr('cy', d3.event.y);
                     const name = circle.attr('id');
                     const _id = name.substring(7);
+                    const graphId = circle.attr('graph-id');
                     select(`#label_${_id}`)
                         .raise()
                         .attr('x', d3.event.x)
                         .attr('y', d3.event.y + +circle.attr('r') / 4);
                     d3.selectAll('line').each(function (l: any, li: any) {
-                        if (`vertex_${d3.select(this).attr('out')}` === name) {
+                        if (`vertex_${d3.select(this).attr('out')}` === name && d3.select(this).attr('graph-id') === graphId) {
                             select(this)
                                 .attr('x1', d3.event.x)
                                 .attr('y1', d3.event.y);
