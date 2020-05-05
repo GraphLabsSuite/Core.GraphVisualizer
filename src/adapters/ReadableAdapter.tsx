@@ -86,19 +86,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .style('font-family', 'sans-serif')
                 .style('text-anchor', 'middle');
         }
-
         function clickEdge(this: SVGLineElement, dataArr: IVertex[]) {
             dataArr[0].rename(this.getAttribute('out'));
             dataArr[1].rename(this.getAttribute('in'));
             console.log(dataArr[0]);
             console.log(dataArr[1]);
-            let elemColour = select<SVGLineElement, {}>(this).style("fill");
-            if (elemColour === 'rgb(255, 0, 0)') {
+            let elemColour = select<SVGLineElement, {}>(this).style("stroke");
+            if (elemColour === 'black') {
                 select<SVGLineElement, {}>(this)
-                    .style('fill', '#000');
+                    .style('stroke', 'green');
             } else {
                 select<SVGLineElement, {}>(this)
-                    .style('fill', '#ff0000');
+                    .style('stroke', 'black');
             }
         }
     }
