@@ -7,8 +7,10 @@ import {Component} from 'react';
 
 import {svg} from "d3";
 
-var clickedEdge = undefined;
-export default clickedEdge;
+export var clickedEdge = {
+    out: "", 
+    in: ""
+}
 
 export interface RAProps {
     className?: string;
@@ -92,7 +94,6 @@ export class ReadableAdapter extends Component<RAProps, State> {
         }
         function clickEdge(this: SVGLineElement, dataArr: IVertex[]) {
             clickedEdge = {
-                type: 'edge',
                 out: this.getAttribute('out'),
                 in: this.getAttribute('in'),
             };
