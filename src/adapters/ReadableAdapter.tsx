@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import {Vertex, Edge, IEdge, IGraph, IVertex} from 'graphlabs.core.graphs';
 import {CircleGraphVisualizer, GeometricEdge, GeometricVertex} from '..';
 import {Component} from 'react';
-
 import {svg} from "d3";
 
 export interface RAProps {
