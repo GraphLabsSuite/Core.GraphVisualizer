@@ -19,6 +19,11 @@ export class GeometricGraph<T extends Graph<K, R>, K extends Vertex, R extends E
   public edges: GeometricEdge<R>[];
 
   /**
+   * @public Id of Geometric graph
+   */
+  public graphId: number;
+
+  /**
    * @constructor
    * @param graph
    */
@@ -26,5 +31,6 @@ export class GeometricGraph<T extends Graph<K, R>, K extends Vertex, R extends E
     this.graph = graph;
     this.vertices = [];
     this.edges = [];
+    this.graphId =  Math.floor(Math.random() * 100) + 1;
   }
 }

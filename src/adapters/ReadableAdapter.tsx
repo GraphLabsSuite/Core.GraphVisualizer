@@ -65,6 +65,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .attr('id', `edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
             .attr('out', elem.edge.vertexOne.name)
             .attr('in', elem.edge.vertexTwo.name)
+            .attr('graph-id', this.graphVisualizer.geometric.graphId)
             .attr('label', elem.label)
             .attr('x1', data[0].x)
             .attr('x2', data[1].x)
@@ -86,12 +87,11 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .style('font-family', 'sans-serif')
                 .style('text-anchor', 'middle');
         }
-
-        function clickEdge(this: SVGLineElement, vertArr: IVertex[]) {
-            vertArr[0].rename(this.getAttribute('out'));
-            vertArr[1].rename(this.getAttribute('in'));
-            console.log(vertArr[0]);
-            console.log(vertArr[1]);
+        function clickEdge(this: SVGLineElement, dataArr: IVertex[]) {
+            dataArr[0].rename(this.getAttribute('out'));
+            dataArr[1].rename(this.getAttribute('in'));
+            console.log(dataArr[0]);
+            console.log(dataArr[1]);
             let elemColour = select<SVGLineElement, {}>(this).style("stroke");
             if (elemColour === 'black') {
                 select<SVGLineElement, {}>(this)
@@ -109,6 +109,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .append('circle')
             .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `vertex_${elem.label}`)
+            .attr('graph-id', this.graphVisualizer.geometric.graphId)
             .attr('cx', elem.center.X)
             .attr('cy', elem.center.Y)
             .attr('label', elem.label)
@@ -133,6 +134,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('font-family', 'sans-serif')
             .style('text-anchor', 'middle')
             .style('padding-top', '50%')
+            .style('padding-left', '25%')
+            .style('padding-right', '25%')
             .style('user-select', 'none')
             .style('pointer-events', 'none');
         const referrer = this.ref;
@@ -151,12 +154,13 @@ export class ReadableAdapter extends Component<RAProps, State> {
                     circle.raise().attr('cx', d3.event.x).attr('cy', d3.event.y);
                     const name = circle.attr('id');
                     const _id = name.substring(7);
+                    const graphId = circle.attr('graph-id');
                     select(`#label_${_id}`)
                         .raise()
                         .attr('x', d3.event.x)
                         .attr('y', d3.event.y + +circle.attr('r') / 4);
                     d3.selectAll('line').each(function (l: any, li: any) {
-                        if (`vertex_${d3.select(this).attr('out')}` === name) {
+                        if (`vertex_${d3.select(this).attr('out')}` === name && d3.select(this).attr('graph-id') === graphId) {
                             select(this)
                                 .attr('x1', d3.event.x)
                                 .attr('y1', d3.event.y);
@@ -187,32 +191,34 @@ export class ReadableAdapter extends Component<RAProps, State> {
             }
         }
 
-        function clickVertex(this: SVGCircleElement, vertexArr: IVertex[]) {
+        function clickVertex(this: SVGCircleElement, dataArr: IVertex[]) {
             let elemColour = select<SVGCircleElement, {}>(this).style("fill");
             if (elemColour === 'rgb(255, 0, 0)') {
                 select<SVGCircleElement, {}>(this)
                     .style('fill', '#eee');
-                if (this.getAttribute('label') == vertexArr[0].name) {
-                    vertexArr[0].rename('');
-                } else if (this.getAttribute('label') == vertexArr[1].name) {
-                    vertexArr[1].rename('');
+                if (this.getAttribute('label') == dataArr[0].name) {
+                    dataArr[0].rename('');
+                } else if (this.getAttribute('label') == dataArr[1].name) {
+                    dataArr[1].rename('');
                 }
             } else {
+                console.log(dataArr[1]);
                 select<SVGCircleElement, {}>(this)
                     .style('fill', '#ff0000');
-                if (vertexArr[0].name == '') {
-                    vertexArr[0].rename(this.getAttribute('label'));
-                } else if (vertexArr[1].name == '') {
-                    vertexArr[1].rename(this.getAttribute('label'));
-                } else if (vertexArr[0].name !== '' && vertexArr[1].name !== '') {
-                    vertexArr[1].rename('');
-                    vertexArr[0].rename(this.getAttribute('label'));
+                if (dataArr[0].name == '') {
+                    dataArr[0].rename(this.getAttribute('label'));
+                } else if (dataArr[1].name == '') {
+                    dataArr[1].rename(this.getAttribute('label'));
+                } else if (dataArr[0].name !== '' && dataArr[1].name !== '') {
+                    dataArr[1].rename('');
+                    dataArr[0].rename(this.getAttribute('label'));
                 }
             }
         }
     }
 
     removeVertexFromSVG(elem: GeometricVertex<Vertex>) {
+
         console.log(this.graphVisualizer);
         select(`#vertex_${elem.label}`)
             .remove();
@@ -258,6 +264,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             }
         }
     }
+
+
 
     componentDidMount() {
         this.graphVisualizer = new CircleGraphVisualizer(this.props.graph);
