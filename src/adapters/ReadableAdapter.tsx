@@ -7,23 +7,8 @@ import {Component} from 'react';
 
 import {svg} from "d3";
 
-export const SET_STATUS: string = 'APP_SET_STATUS';
-export const SET_ACTION: string = 'APP_SET_ACTION';
-
-export const appActionCreators = {
-  setStatus(payload: boolean) {
-    return {
-      type: SET_STATUS,
-      payload,
-    };
-  },
-  setAction(payload: any) {
-    return {
-      type: SET_ACTION,
-      payload,
-    };
-  }
-};
+var clickedEdge = undefined;
+export default clickedEdge;
 
 export interface RAProps {
     className?: string;
@@ -106,12 +91,11 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .style('text-anchor', 'middle');
         }
         function clickEdge(this: SVGLineElement, dataArr: IVertex[]) {
-            const action = {
+            clickedEdge = {
                 type: 'edge',
                 out: this.getAttribute('out'),
                 in: this.getAttribute('in'),
             };
-            appActionCreators.setAction(action);
             let elemColour = select<SVGLineElement, {}>(this).style("stroke");
             if (elemColour === 'black') {
                 select<SVGLineElement, {}>(this)
