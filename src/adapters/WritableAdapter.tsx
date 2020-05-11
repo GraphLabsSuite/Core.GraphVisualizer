@@ -121,10 +121,8 @@ export class WritableAdapter extends ReadableAdapter {
             // проверка ребра на уникальность (нет ребер с таким же именем и нет ребер между данными двумя вершинами)
             let isRepeated2: boolean;
             if (this.props.graph.edges.some(e => e.name === edge.name
-                || e.vertexOne.name === edge.vertexOne.name
-                || e.vertexTwo.name === edge.vertexOne.name
-                || e.vertexOne.name === edge.vertexTwo.name
-                || e.vertexTwo.name === edge.vertexTwo.name)) {
+                || (e.vertexOne.name === edge.vertexOne.name && e.vertexTwo.name === edge.vertexTwo.name)
+                || (e.vertexOne.name === edge.vertexTwo.name && e.vertexTwo.name === edge.vertexOne.name))) {
                 isRepeated2 = true;
                 console.log('Repeated edge!');
             }

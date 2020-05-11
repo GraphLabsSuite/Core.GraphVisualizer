@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import {Vertex, Edge, IEdge, IGraph, IVertex} from 'graphlabs.core.graphs';
 import {CircleGraphVisualizer, GeometricEdge, GeometricVertex} from '..';
 import {Component} from 'react';
-
 import {svg} from "d3";
 
 export const SET_STATUS: string = 'APP_SET_STATUS';
@@ -175,12 +174,14 @@ export class ReadableAdapter extends Component<RAProps, State> {
                     const name = circle.attr('id');
                     const _id = name.substring(7);
                     const graphId = circle.attr('graph-id');
+                    console.log('graphid'+graphId);
                     select(`#label_${_id}`)
                         .raise()
                         .attr('x', d3.event.x)
                         .attr('y', d3.event.y + +circle.attr('r') / 4);
                     d3.selectAll('line').each(function (l: any, li: any) {
                         if (`vertex_${d3.select(this).attr('out')}` === name && d3.select(this).attr('graph-id') === graphId) {
+                            console.log('graphid2'+d3.select(this).attr('graph-id'));
                             select(this)
                                 .attr('x1', d3.event.x)
                                 .attr('y1', d3.event.y);
@@ -190,7 +191,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
                             }
                         }
-                        if (`vertex_${d3.select(this).attr('in')}` === name) {
+                        if (`vertex_${d3.select(this).attr('in')}` === name && d3.select(this).attr('graph-id') === graphId) {
                             select(this)
                                 .attr('x2', d3.event.x)
                                 .attr('y2', d3.event.y);
