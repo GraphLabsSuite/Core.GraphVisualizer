@@ -6,24 +6,6 @@ import {CircleGraphVisualizer, GeometricEdge, GeometricVertex} from '..';
 import {Component} from 'react';
 import {svg} from "d3";
 
-export const SET_STATUS: string = 'APP_SET_STATUS';
-export const SET_ACTION: string = 'APP_SET_ACTION';
-
-export const appActionCreators = {
-  setStatus(payload: boolean) {
-    return {
-      type: SET_STATUS,
-      payload,
-    };
-  },
-  setAction(payload: any) {
-    return {
-      type: SET_ACTION,
-      payload,
-    };
-  }
-};
-
 export interface RAProps {
     className?: string;
     graph: IGraph<IVertex, IEdge>;
@@ -105,12 +87,10 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .style('text-anchor', 'middle');
         }
         function clickEdge(this: SVGLineElement, dataArr: IVertex[]) {
-            const action = {
-                type: 'edge',
-                out: this.getAttribute('out'),
-                in: this.getAttribute('in'),
-            };
-            appActionCreators.setAction(action);
+            dataArr[0].rename(this.getAttribute("out"));
+            dataArr[1].rename(this.getAttribute("in"));
+            sessionStorage.setItem("out", this.getAttribute("out"));
+            sessionStorage.setItem("in", this.getAttribute("in"));
             let elemColour = select<SVGLineElement, {}>(this).style("stroke");
             if (elemColour === 'black') {
                 select<SVGLineElement, {}>(this)
