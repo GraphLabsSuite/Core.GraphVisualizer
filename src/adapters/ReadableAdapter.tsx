@@ -13,6 +13,7 @@ export interface RAProps {
     vertexNaming?: boolean;
     withoutDragging?: boolean;
     edgeNaming?: boolean;
+    incidentEdges?: boolean;
 }
 
 export interface State {
@@ -122,6 +123,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .classed('dragging', true)
                 .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag));
         }
+        
         select(this.ref)
             .append('text')
             .attr('id', `label_${elem.label}`)
@@ -191,6 +193,59 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 circle.classed('dragging', false);
             }
         }
+     
+        function clickIncidentEdge(this: SVGCircleElement, dataArr: IVertex[]) {
+            let arr_one: IEdge[] = [];
+            let arr_two: IEdge[] = [];
+            let vertexColour = select<SVGCircleElement, {}>(this).style("fill");
+            if (vertexColour === 'rgb(238, 238, 238)') {
+                select<SVGCircleElement, {}>(this)
+                    .style('fill', '#ff0000');
+                if (dataArr[0].name == '') {
+                    dataArr[0].rename(this.getAttribute('label'));
+                    arr_one = dataArr[0].arrOfIncidentEdges(myGraph);
+                    d3.selectAll<SVGLineElement, IEdge[]>('line').each(function (l: any, li: any) {
+                        for (let i = 0; i < arr_one.length; i++) {
+                            if (d3.select(this).attr('in') == arr_one[i].vertexOne.name &&
+                                d3.select(this).attr('out') == arr_one[i].vertexTwo.name ||
+                                d3.select(this).attr('out') == arr_one[i].vertexOne.name
+                                && d3.select(this).attr('in') == arr_one[i].vertexTwo.name) {
+                                select<SVGLineElement, {}>(this).style("stroke", 'green');
+                            }
+                        }
+                    });
+
+                } else if (dataArr[1].name == '') {
+                    dataArr[1].rename(this.getAttribute('label'));
+                    arr_two = dataArr[1].arrOfIncidentEdges(myGraph);
+                    d3.selectAll<SVGLineElement, IEdge[]>('line').each(function (l: any, li: any) {
+                        for (let i = 0; i < arr_two.length; i++) {
+                            if (d3.select(this).attr('in') == arr_two[i].vertexOne.name &&
+                                d3.select(this).attr('out') == arr_two[i].vertexTwo.name ||
+                                d3.select(this).attr('out') == arr_two[i].vertexOne.name
+                                && d3.select(this).attr('in') == arr_two[i].vertexTwo.name) {
+                                select<SVGLineElement, {}>(this).style("stroke", 'green');
+                            }
+                        }
+                    });
+                } else if (dataArr[0].name !== '' && dataArr[1].name !== '') {
+                    dataArr[1].rename('');
+                    dataArr[0].rename(this.getAttribute('label'));
+                    arr_one = dataArr[0].arrOfIncidentEdges(myGraph);
+                    d3.selectAll<SVGLineElement, IEdge[]>('line').each(function (l: any, li: any) {
+                        for (let i = 0; i < arr_one.length; i++) {
+                            if (d3.select(this).attr('in') == arr_one[i].vertexOne.name &&
+                                d3.select(this).attr('out') == arr_one[i].vertexTwo.name ||
+                                d3.select(this).attr('out') == arr_one[i].vertexOne.name
+                                && d3.select(this).attr('in') == arr_one[i].vertexTwo.name) {
+                                select<SVGLineElement, {}>(this).style("stroke", 'green');
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
 
         function clickVertex(this: SVGCircleElement, dataArr: IVertex[]) {
             let elemColour = select<SVGCircleElement, {}>(this).style("fill");
