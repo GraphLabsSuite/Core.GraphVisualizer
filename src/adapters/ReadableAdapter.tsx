@@ -117,17 +117,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('fill', '#eee')
             .style('stroke', '#000')
             .style('stroke-width', 5)
-            .on('click', clickVertex);
+        if (this.props.incidentEdges == true){
+            createVertex
+                .on('click', clickIncidentEdge);
+        } else {
+            createVertex
+                .on('click', clickVertex);
+        }
         if (this.props.withoutDragging !== true){
             createVertex
                 .classed('dragging', true)
                 .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag));
-        }
-        
-        if (this.props.incidentEdges == true){
-            createVertex
-                .on('click', clickIncidentEdge);
-        }
+        } 
         
         select(this.ref)
             .append('text')
