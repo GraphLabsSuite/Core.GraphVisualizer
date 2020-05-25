@@ -124,6 +124,11 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag));
         }
         
+        if (this.props.incidentEdges == true){
+            createVertex
+                .on('click', clickIncidentEdge);
+        }
+        
         select(this.ref)
             .append('text')
             .attr('id', `label_${elem.label}`)
