@@ -147,6 +147,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('pointer-events', 'none');
         const referrer = this.ref;
         const isNamedEdges = this.props.namedEdges;
+        const myGraph = this.graphVisualizer.geometric.graph;
 
         function startDrag(this: SVGCircleElement) {
             const circle = d3.select(this).classed('dragging', true);
