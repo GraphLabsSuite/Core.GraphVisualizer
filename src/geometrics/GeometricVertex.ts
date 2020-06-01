@@ -12,6 +12,8 @@ export class GeometricVertex<T extends Vertex> {
   public borderWidth: number = 1;
 
   public label: string;
+  
+  public wave: string;
 
   public radius: number = 10;
 
