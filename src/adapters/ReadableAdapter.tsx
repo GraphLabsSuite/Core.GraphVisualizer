@@ -114,6 +114,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .attr('cy', elem.center.Y)
             .attr('label', elem.label)
             .attr('r', elem.radius)
+            .attr('wave', elem.wave)
             .style('fill', '#eee')
             .style('stroke', '#000')
             .style('stroke-width', 5)
@@ -201,13 +202,16 @@ export class ReadableAdapter extends Component<RAProps, State> {
             }
         }
      
-        function clickIncidentEdge(this: SVGCircleElement, dataArr: IVertex[]) {
+                function clickIncidentEdge(this: SVGCircleElement, dataArr: IVertex[]) {
             let arr_one: IEdge[] = [];
             let arr_two: IEdge[] = [];
+            let waveAttr = select<SVGCircleElement,{}>(this).attr('wave');
             let vertexColour = select<SVGCircleElement, {}>(this).style("fill");
             if (vertexColour === 'rgb(238, 238, 238)') {
                 select<SVGCircleElement, {}>(this)
                     .style('fill', '#ff0000');
+                select<SVGTextElement,{}>(`#label_${this.getAttribute('label')}`)
+                    .text(this.getAttribute('label')+'(' + this.getAttribute('wave') + ')');
                 if (dataArr[0].name == '') {
                     dataArr[0].rename(this.getAttribute('label'));
                     arr_one = dataArr[0].arrOfIncidentEdges(myGraph);
@@ -251,8 +255,28 @@ export class ReadableAdapter extends Component<RAProps, State> {
                     });
                 }
             }
-        }
+            if (vertexColour === 'rgb(255, 0, 0)'){
+                let arr: IVertex[] = [];
+                let data: IVertex;
+                for (let l = 0; l < myGraph.vertices.length; l++){
+                    if(this.getAttribute('label') === myGraph.vertices[l].name){
+                        data = myGraph.vertices[l];
+                    }
+                }
+                arr = data.arrOfAdjacentVertices(myGraph);
+                for (let k = 0; k < arr.length; k++){
+                    if (+this.getAttribute('wave') === +arr[k].wave + 1){
+                        select<SVGCircleElement, {}>(this)
+                            .style('fill', 'blue');
+                        select<SVGLineElement,{}>(`#edge_${arr[k].name}_${this.getAttribute('label')}`)
+                            .style( 'stroke', 'red');
+                        select<SVGLineElement,{}>(`#edge_${this.getAttribute('label')}_${arr[k].name}`)
+                            .style( 'stroke', 'red');
+                    }
+                }
+            }
 
+        }
 
         function clickVertex(this: SVGCircleElement, dataArr: IVertex[]) {
             let elemColour = select<SVGCircleElement, {}>(this).style("fill");
