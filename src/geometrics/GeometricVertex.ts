@@ -22,5 +22,6 @@ export class GeometricVertex<T extends Vertex> {
   public constructor(vertex: T) {
     this.vertex = vertex;
     this.label = vertex.name;
+    this.wave = vertex.wave;
   }
 }
