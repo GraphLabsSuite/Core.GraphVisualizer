@@ -16,7 +16,7 @@ export class GeometricEdge<T extends Edge> {
 
   public outPoint: Point = new Point(0,0);
 
-  public weightLabel: number;
+  public weightLabel: string;
 
   public label: string;
 
