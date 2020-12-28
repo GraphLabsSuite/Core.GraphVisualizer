@@ -14,6 +14,7 @@ export interface RAProps {
     withoutDragging?: boolean;
     edgeNaming?: boolean;
     incidentEdges?: boolean;
+    weightedEdges?: boolean;
 }
 
 export interface State {
@@ -84,6 +85,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .text(elem.label)
                 .style('fill', '#000')
                 .style('font-size', '14px')
+                .style('font-family', 'sans-serif')
+                .style('text-anchor', 'middle');
+        }
+        if (this.props.weightedEdges == true){
+            select(this.ref)
+                .append('text')
+                .attr('id', `label2_${elem.label}`)
+                .attr('x', (data[0].x + data[1].x) / 2)
+                .attr('y', ((data[0].y + data[1].y) / 2) + 15)
+                .text(elem.weightLabel)
+                .style('fill', '#000')
+                .style('font-size', '16px')
                 .style('font-family', 'sans-serif')
                 .style('text-anchor', 'middle');
         }
@@ -210,8 +223,8 @@ export class ReadableAdapter extends Component<RAProps, State> {
             if (vertexColour === 'rgb(238, 238, 238)') {
                 select<SVGCircleElement, {}>(this)
                     .style('fill', '#ff0000');
-                select<SVGTextElement,{}>(`#label_${this.getAttribute('label')}`)
-                    .text(this.getAttribute('label')+'(' + this.getAttribute('wave') + ')');
+                //select<SVGTextElement,{}>(`#label_${this.getAttribute('label')}`)
+                  // .text(this.getAttribute('label')+'(' + this.getAttribute('wave') + ')');
                 if (dataArr[0].name == '') {
                     dataArr[0].rename(this.getAttribute('label'));
                     arr_one = dataArr[0].arrOfIncidentEdges(myGraph);
@@ -273,6 +286,9 @@ export class ReadableAdapter extends Component<RAProps, State> {
                         select<SVGLineElement,{}>(`#edge_${this.getAttribute('label')}_${arr[k].name}`)
                             .style( 'stroke', 'red');
                     }
+                    else if (this.getAttribute('wave') === '0') {
+                        select<SVGCircleElement, {}>(this) .style('fill', 'blue');
+                    } //окраска стартовой верширы!
                 }
             }
 
