@@ -89,7 +89,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .attr('y', ((data[0].y + data[1].y) / 2) + 15)
                 .text(elem.label)
                 .style('fill', '#000')
-                .style('font-size', '14px')
+                .style('font-size', '16px')
                 .style('font-family', 'sans-serif')
                 .style('text-anchor', 'middle');
         }
