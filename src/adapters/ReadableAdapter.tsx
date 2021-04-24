@@ -16,6 +16,7 @@ export interface RAProps {
     incidentEdges?: boolean;
     weightedEdges?: boolean;
     isDirected?:boolean;
+    weightNamedEdges?:boolean;
 }
 
 export interface State {
@@ -70,6 +71,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .attr('in', elem.edge.vertexTwo.name)
             .attr('graph-id', this.graphVisualizer.geometric.graphId)
             .attr('label', elem.label)
+            .attr('weightLabel', elem.weightLabel)
             .attr('x1', data[0].x)
             .attr('x2', data[1].x)
             .attr('y1', data[0].y)
@@ -78,32 +80,52 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('stroke', 'black')
             .style('stroke-width', 5)
             .style('fill', 'none')
+            .style('z-index', 1)
             .on('click', clickEdge);
 
 
         if (this.props.namedEdges == true) {
             select(this.ref)
                 .append('text')
-                .attr('id', `label2_${elem.label}`)
+                .attr('id', `label2_${elem.label}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
                 .attr('x', (data[0].x + data[1].x) / 2)
                 .attr('y', ((data[0].y + data[1].y) / 2) + 15)
                 .text(elem.label)
                 .style('fill', '#000')
                 .style('font-size', '16px')
                 .style('font-family', 'sans-serif')
-                .style('text-anchor', 'middle');
+                .style('text-anchor', 'middle')
+                .style('z-index', 100);
         }
+
         else if (this.props.weightedEdges == true){
             select(this.ref)
                 .append('text')
-                .attr('id', `label2_${elem.label}`)
+                .attr('id', `weightLabel_${elem.weightLabel}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
                 .attr('x', (data[0].x + data[1].x) / 2)
                 .attr('y', ((data[0].y + data[1].y) / 2) + 15)
                 .text(elem.weightLabel)
-                .style('fill', '#000')
+                .style('fill', '#696969')
                 .style('font-size', '16px')
+                .style('font-weight', 'bold')
                 .style('font-family', 'sans-serif')
-                .style('text-anchor', 'middle');
+                .style('text-anchor', 'middle')
+                .style('z-index', 100);
+        }
+
+        else if (this.props.weightNamedEdges == true){
+            select(this.ref)
+                .append('text')
+                .attr('id', `weightName_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+                .attr('x', (data[0].x + data[1].x) / 2)
+                .attr('y', ((data[0].y + data[1].y) / 2) + 15)
+                .text(`(${elem.label}, ${elem.weightLabel})`)
+                .style('fill', '#696969')
+                .style('font-size', '15px')
+                .style('font-weight', 'bold')
+                .style('font-family', 'sans-serif')
+                .style('text-anchor', 'middle')
+                .style('z-index', 100);
         }
 
         if (this.props.isDirected == true){
@@ -188,6 +210,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
         const isNamedEdges = this.props.namedEdges;
         const isWeightedEdges = this.props.weightedEdges;
         const myGraph = this.graphVisualizer.geometric.graph;
+        const isWeightedNamedEdges = this.props.weightNamedEdges;
 
         function startDrag(this: SVGCircleElement) {
             const circle = d3.select(this).classed('dragging', true);
@@ -214,8 +237,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
                             select(this)
                                 .attr('x1', d3.event.x)
                                 .attr('y1', d3.event.y);
-                            if (isNamedEdges == true || isWeightedEdges == true) {
-                                select(`#label2_${d3.select(this).attr('label')}`)
+                            if (isNamedEdges == true) {
+                                select(`#label2_${d3.select(this).attr('label')}_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
+                                    .attr('x', (d3.event.x + Number(d3.select(this).attr('x2'))) / 2)
+                                    .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
+                            }
+                            if (isWeightedEdges == true){
+                                select(`#weightLabel_${d3.select(this).attr('weightLabel')}_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
+                                    .attr('x', (d3.event.x + Number(d3.select(this).attr('x2'))) / 2)
+                                    .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
+                            }
+                            if (isWeightedNamedEdges == true){
+                                select(`#weightName_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x2'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
                             }
@@ -224,8 +257,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
                             select(this)
                                 .attr('x2', d3.event.x)
                                 .attr('y2', d3.event.y);
-                            if (isNamedEdges == true || isWeightedEdges == true) {
-                                select(`#label2_${d3.select(this).attr('label')}`)
+                            if (isNamedEdges == true) {
+                                select(`#label2_${d3.select(this).attr('label')}_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
+                                    .attr('x', (d3.event.x + Number(d3.select(this).attr('x1'))) / 2)
+                                    .attr('y', ((d3.event.y + Number(d3.select(this).attr('y1'))) / 2) + 15);
+                            }
+                            if (isWeightedEdges == true){
+                                select(`#weightLabel_${d3.select(this).attr('weightLabel')}_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
+                                    .attr('x', (d3.event.x + Number(d3.select(this).attr('x1'))) / 2)
+                                    .attr('y', ((d3.event.y + Number(d3.select(this).attr('y1'))) / 2) + 15);
+                            }
+                            if (isWeightedNamedEdges == true){
+                                select(`#weightName_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x1'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y1'))) / 2) + 15);
                             }
@@ -359,8 +402,13 @@ export class ReadableAdapter extends Component<RAProps, State> {
         console.log(this.graphVisualizer);
         select(`#edge_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
             .remove();
-        select(`#label2_${elem.label}`)
+        select(`#label2_${elem.label}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
             .remove();
+        select(`#weightLabel_${elem.weightLabel}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+            .remove();
+        select(`#weightName_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+            .remove();
+
     }
 
     updateSvg() {
@@ -386,8 +434,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .attr('x2', elem.inPoint.X)
                 .attr('y1', elem.outPoint.Y)
                 .attr('y2', elem.inPoint.Y);
-            if (this.props.namedEdges == true || this.props.weightedEdges == true) {
-                select(`#label2_${elem.label}`)
+            if (this.props.namedEdges == true) {
+                select(`#label2_${elem.label}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+                    .attr('x', (elem.outPoint.X + elem.inPoint.X) / 2)
+                    .attr('y', ((elem.outPoint.Y + elem.inPoint.Y) / 2) + 15);
+            }
+            if(this.props.weightedEdges == true){
+                select(`#weightLabel_${elem.weightLabel}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
+                    .attr('x', (elem.outPoint.X + elem.inPoint.X) / 2)
+                    .attr('y', ((elem.outPoint.Y + elem.inPoint.Y) / 2) + 15);
+            }
+            if(this.props.weightNamedEdges == true){
+                select(`#weightName_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
                     .attr('x', (elem.outPoint.X + elem.inPoint.X) / 2)
                     .attr('y', ((elem.outPoint.Y + elem.inPoint.Y) / 2) + 15);
             }
