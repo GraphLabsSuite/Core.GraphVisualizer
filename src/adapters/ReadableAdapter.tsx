@@ -119,7 +119,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .attr('id', `weightName_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
                 .attr('x', (data[0].x + data[1].x) / 2)
                 .attr('y', ((data[0].y + data[1].y) / 2) + 15)
-                .text(`(${elem.label}, ${elem.weightLabel})`)
+                .text(`(${elem.label},${elem.weightLabel})`)
                 .style('fill', '#696969')
                 .style('font-size', '15px')
                 .style('font-weight', 'bold')
