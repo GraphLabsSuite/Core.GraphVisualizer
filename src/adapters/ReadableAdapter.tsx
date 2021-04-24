@@ -15,8 +15,8 @@ export interface RAProps {
     edgeNaming?: boolean;
     incidentEdges?: boolean;
     weightedEdges?: boolean;
-    isDirected?:boolean;
-    weightNamedEdges?:boolean;
+    isDirected?: boolean;
+    weightNamedEdges?: boolean;
 }
 
 export interface State {
@@ -96,9 +96,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .style('font-family', 'sans-serif')
                 .style('text-anchor', 'middle')
                 .style('z-index', 100);
-        }
-
-        else if (this.props.weightedEdges == true){
+        } else if (this.props.weightedEdges == true) {
             select(this.ref)
                 .append('text')
                 .attr('id', `weightLabel_${elem.weightLabel}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
@@ -111,9 +109,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .style('font-family', 'sans-serif')
                 .style('text-anchor', 'middle')
                 .style('z-index', 100);
-        }
-
-        else if (this.props.weightNamedEdges == true){
+        } else if (this.props.weightNamedEdges == true) {
             select(this.ref)
                 .append('text')
                 .attr('id', `weightName_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
@@ -128,7 +124,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 .style('z-index', 100);
         }
 
-        if (this.props.isDirected == true){
+        if (this.props.isDirected == true) {
             select<SVGSVGElement, IEdge[]>(this.ref)
                 .append('defs')
                 .append("marker")
@@ -165,7 +161,7 @@ export class ReadableAdapter extends Component<RAProps, State> {
 
     addVertexToSVG(elem: GeometricVertex<Vertex>) {
         console.log(this.graphVisualizer);
-        let createVertex =  select<SVGSVGElement, IVertex[]>(this.ref)
+        let createVertex = select<SVGSVGElement, IVertex[]>(this.ref)
             .append('circle')
             .datum([this.vertexOne, this.vertexTwo])
             .attr('id', `vertex_${elem.label}`)
@@ -178,19 +174,19 @@ export class ReadableAdapter extends Component<RAProps, State> {
             .style('fill', '#eee')
             .style('stroke', '#000')
             .style('stroke-width', 5)
-        if (this.props.incidentEdges == true){
+        if (this.props.incidentEdges == true) {
             createVertex
                 .on('click', clickIncidentEdge);
         } else {
             createVertex
                 .on('click', clickVertex);
         }
-        if (this.props.withoutDragging !== true){
+        if (this.props.withoutDragging !== true) {
             createVertex
                 .classed('dragging', true)
                 .call(d3.drag<SVGCircleElement, IVertex[]>().on('start', startDrag));
-        } 
-        
+        }
+
         select(this.ref)
             .append('text')
             .attr('id', `label_${elem.label}`)
@@ -226,14 +222,14 @@ export class ReadableAdapter extends Component<RAProps, State> {
                     const name = circle.attr('id');
                     const _id = name.substring(7);
                     const graphId = circle.attr('graph-id');
-                    console.log('graphid'+graphId);
+                    console.log('graphid' + graphId);
                     select(`#label_${_id}`)
                         .raise()
                         .attr('x', d3.event.x)
                         .attr('y', d3.event.y + +circle.attr('r') / 4);
                     d3.selectAll('line').each(function (l: any, li: any) {
                         if (`vertex_${d3.select(this).attr('out')}` === name && d3.select(this).attr('graph-id') === graphId) {
-                            console.log('graphid2'+d3.select(this).attr('graph-id'));
+                            console.log('graphid2' + d3.select(this).attr('graph-id'));
                             select(this)
                                 .attr('x1', d3.event.x)
                                 .attr('y1', d3.event.y);
@@ -242,12 +238,12 @@ export class ReadableAdapter extends Component<RAProps, State> {
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x2'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
                             }
-                            if (isWeightedEdges == true){
+                            if (isWeightedEdges == true) {
                                 select(`#weightLabel_${d3.select(this).attr('weightLabel')}_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x2'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
                             }
-                            if (isWeightedNamedEdges == true){
+                            if (isWeightedNamedEdges == true) {
                                 select(`#weightName_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x2'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y2'))) / 2) + 15);
@@ -262,12 +258,12 @@ export class ReadableAdapter extends Component<RAProps, State> {
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x1'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y1'))) / 2) + 15);
                             }
-                            if (isWeightedEdges == true){
+                            if (isWeightedEdges == true) {
                                 select(`#weightLabel_${d3.select(this).attr('weightLabel')}_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x1'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y1'))) / 2) + 15);
                             }
-                            if (isWeightedNamedEdges == true){
+                            if (isWeightedNamedEdges == true) {
                                 select(`#weightName_${d3.select(this).attr('out')}_${d3.select(this).attr('in')}`)
                                     .attr('x', (d3.event.x + Number(d3.select(this).attr('x1'))) / 2)
                                     .attr('y', ((d3.event.y + Number(d3.select(this).attr('y1'))) / 2) + 15);
@@ -283,17 +279,17 @@ export class ReadableAdapter extends Component<RAProps, State> {
                 circle.classed('dragging', false);
             }
         }
-     
-                function clickIncidentEdge(this: SVGCircleElement, dataArr: IVertex[]) {
+
+        function clickIncidentEdge(this: SVGCircleElement, dataArr: IVertex[]) {
             let arr_one: IEdge[] = [];
             let arr_two: IEdge[] = [];
-            let waveAttr = select<SVGCircleElement,{}>(this).attr('wave');
+            let waveAttr = select<SVGCircleElement, {}>(this).attr('wave');
             let vertexColour = select<SVGCircleElement, {}>(this).style("fill");
             if (vertexColour === 'rgb(238, 238, 238)') {
                 select<SVGCircleElement, {}>(this)
                     .style('fill', '#ff0000');
                 //select<SVGTextElement,{}>(`#label_${this.getAttribute('label')}`)
-                  // .text(this.getAttribute('label')+'(' + this.getAttribute('wave') + ')');
+                // .text(this.getAttribute('label')+'(' + this.getAttribute('wave') + ')');
                 if (dataArr[0].name == '') {
                     dataArr[0].rename(this.getAttribute('label'));
                     arr_one = dataArr[0].arrOfIncidentEdges(myGraph);
@@ -337,26 +333,25 @@ export class ReadableAdapter extends Component<RAProps, State> {
                     });
                 }
             }
-            if (vertexColour === 'rgb(255, 0, 0)'){
+            if (vertexColour === 'rgb(255, 0, 0)') {
                 let arr: IVertex[] = [];
                 let data: IVertex;
-                for (let l = 0; l < myGraph.vertices.length; l++){
-                    if(this.getAttribute('label') === myGraph.vertices[l].name){
+                for (let l = 0; l < myGraph.vertices.length; l++) {
+                    if (this.getAttribute('label') === myGraph.vertices[l].name) {
                         data = myGraph.vertices[l];
                     }
                 }
                 arr = data.arrOfAdjacentVertices(myGraph);
-                for (let k = 0; k < arr.length; k++){
-                    if (+this.getAttribute('wave') === +arr[k].wave + 1){
+                for (let k = 0; k < arr.length; k++) {
+                    if (+this.getAttribute('wave') === +arr[k].wave + 1) {
                         select<SVGCircleElement, {}>(this)
                             .style('fill', 'blue');
-                        select<SVGLineElement,{}>(`#edge_${arr[k].name}_${this.getAttribute('label')}`)
-                            .style( 'stroke', 'red');
-                        select<SVGLineElement,{}>(`#edge_${this.getAttribute('label')}_${arr[k].name}`)
-                            .style( 'stroke', 'red');
-                    }
-                    else if (this.getAttribute('wave') === '0') {
-                        select<SVGCircleElement, {}>(this) .style('fill', 'blue');
+                        select<SVGLineElement, {}>(`#edge_${arr[k].name}_${this.getAttribute('label')}`)
+                            .style('stroke', 'red');
+                        select<SVGLineElement, {}>(`#edge_${this.getAttribute('label')}_${arr[k].name}`)
+                            .style('stroke', 'red');
+                    } else if (this.getAttribute('wave') === '0') {
+                        select<SVGCircleElement, {}>(this).style('fill', 'blue');
                     } //окраска стартовой верширы!
                 }
             }
@@ -439,19 +434,18 @@ export class ReadableAdapter extends Component<RAProps, State> {
                     .attr('x', (elem.outPoint.X + elem.inPoint.X) / 2)
                     .attr('y', ((elem.outPoint.Y + elem.inPoint.Y) / 2) + 15);
             }
-            if(this.props.weightedEdges == true){
+            if (this.props.weightedEdges == true) {
                 select(`#weightLabel_${elem.weightLabel}_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
                     .attr('x', (elem.outPoint.X + elem.inPoint.X) / 2)
                     .attr('y', ((elem.outPoint.Y + elem.inPoint.Y) / 2) + 15);
             }
-            if(this.props.weightNamedEdges == true){
+            if (this.props.weightNamedEdges == true) {
                 select(`#weightName_${elem.edge.vertexOne.name}_${elem.edge.vertexTwo.name}`)
                     .attr('x', (elem.outPoint.X + elem.inPoint.X) / 2)
                     .attr('y', ((elem.outPoint.Y + elem.inPoint.Y) / 2) + 15);
             }
         }
     }
-
 
 
     componentDidMount() {
