@@ -2,7 +2,7 @@ import * as React from 'react';
 import {ReadableAdapter} from "./ReadableAdapter";
 import {select} from "d3-selection";
 import * as d3 from 'd3';
-import {IVertex, Vertex, Edge, IEdge} from "graphlabs.core.graphs";
+import {IVertex, Vertex, Edge, IEdge, DirectedEdge} from "graphlabs.core.graphs";
 import {GeometricEdge, GeometricVertex} from "..";
 
 export class WritableAdapter extends ReadableAdapter {
@@ -62,84 +62,168 @@ export class WritableAdapter extends ReadableAdapter {
     }
 
     public addEdge() {
-        console.log(this.graphVisualizer);
         super.addEdge();
         console.log('vert1' + this.vertexOne);
-        console.log('vert2' + this.vertexTwo);
+        console.log('vert2' + this.vertexTwo)
         let edge: Edge;
-        if (this.vertexOne.name != '' && this.vertexTwo.name != '' && this.numberOfSelectedVertices() === 2) {
-            // добавление ребра (именование вручную)
-            if (this.props.edgeNaming === true) {
-                let edgeName = prompt('Enter the name of the edge', '');
-                if (edgeName !== '' && edgeName !== null) {
-                   // if (this.vertexOne.name != '' && this.vertexTwo.name != '') {
+        if (!this.props.isDirected) {
+            console.log('not directed');
+            if (this.vertexOne.name != '' && this.vertexTwo.name != '' && this.numberOfSelectedVertices() === 2) {
+                // добавление ребра (именование вручную)
+                if (this.props.edgeNaming === true) {
+                    let edgeName = prompt('Enter the name of the edge', '');
+                    if (edgeName !== '' && edgeName !== null) {
                         edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), edgeName);
-                       /* this.props.graph.addEdge(edge);
-                        this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
-                        this.addEdgeToSVG(new GeometricEdge(edge));
-                        this.updateSvg();*/
-                   // }
+                    } else {
+                        return;
+                    }
                 } else {
-                    return;
+                    // добавление ребра (автоматическое именование)
+                    if (this.props.namedEdges == true) {
+                        if (this.graphVisualizer.geometric.edges.length != 0) {
+                            let edgeNumbers = [];
+                            for (let i = 0; i < this.graphVisualizer.geometric.edges.length; i++) {
+                                edgeNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
+                            }
+                            let maxNum = Math.max.apply(null, edgeNumbers);
+                            edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), (maxNum + 1).toString());
+                        } else {
+                            edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), '0');
+                        }
+                    } else {
+                        // добавленеи неименованных ребер
+                        edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
+                    }
+
+                }
+                // проверка ребра на уникальность (нет ребер с таким же именем и нет ребер между данными двумя вершинами)
+                let isRepeated2: boolean;
+                if (this.props.graph.edges.some(e => e.name === edge.name
+                    || (e.vertexOne.name === edge.vertexOne.name && e.vertexTwo.name === edge.vertexTwo.name)
+                    || (e.vertexOne.name === edge.vertexTwo.name && e.vertexTwo.name === edge.vertexOne.name))) {
+                    isRepeated2 = true;
+                    console.log('Repeated edge!');
+                }
+                // добавление ребра в модель, геом.граф и в svg
+                if (isRepeated2 !== true) {
+                    console.log(edge);
+                    this.props.graph.addEdge(edge);
+                    this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
+                    this.addEdgeToSVG(new GeometricEdge(edge));
+                    this.updateSvg();
                 }
             } else {
-               // if (this.vertexOne.name != '' && this.vertexTwo.name != '') {
+                alert('Для добавления ребра необходимо выбрать две вершины!')
+            }
 
-                   /* let isRepeated: boolean;
-                    for (let i = 0; i < this.props.graph.edges.length; i++) {
-                        if (this.props.graph.edges[i].vertexOne.name == this.vertexOne.name && this.props.graph.edges[i].vertexTwo.name == this.vertexTwo.name
-                            || this.props.graph.edges[i].vertexOne.name == this.vertexTwo.name && this.props.graph.edges[i].vertexTwo.name == this.vertexOne.name) {
-                            isRepeated = true;
-                        }
+            this.vertexOne.rename('');
+            this.vertexTwo.rename('');
+        }
+        else{
+            console.log('Directed');
+            if  (this.numberOfSelectedVertices() ===0 ) {
+                alert('Для добавления ребра необходимо выбрать хотя бы одну вершину!')
+            }
+
+            if (this.vertexOne.name!='' && this.numberOfSelectedVertices() ===1 ) {
+                console.log('one vertex');
+                if (this.props.edgeNaming === true) {
+                    let edgeName = prompt('Введите имя дуги:', '');
+                    if (edgeName !== '' && edgeName !== null) {
+                        edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexOne.name), edgeName);
+                    } else {
+                        return;
                     }
-                    if (isRepeated == true) {
-                        console.log("Repeated item!");
-                    } else { */
-                   // добавление ребра (автоматическое именование)
-                        if (this.props.namedEdges == true) {
-                            if (this.graphVisualizer.geometric.edges.length != 0) {
-                                let edgeNumbers = [];
-                                for (let i = 0; i < this.graphVisualizer.geometric.edges.length; i++) {
-                                    edgeNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
-                                }
-                                let maxNum = Math.max.apply(null, edgeNumbers);
-                                edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), (maxNum + 1).toString());
-                            } else {
-                                edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), '0');
+                } else {
+                    // добавление ребра (автоматическое именование)
+                    console.log('adding');
+                    if (this.props.namedEdges == true) {
+                        if (this.graphVisualizer.geometric.edges.length != 0) {
+                            let edgeNumbers = [];
+                            for (let i = 0; i < this.graphVisualizer.geometric.edges.length; i++) {
+                                edgeNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
                             }
-                        } else { // добавленеи неименованных ребер
-                            edge = new Edge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
+                            let maxNum = Math.max.apply(null, edgeNumbers);
+                            edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexOne.name), (maxNum + 1).toString());
+                        } else {
+                            edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexOne.name), '0');
                         }
-                        /*console.log(edge);
+                    } else {
+                        // добавленеи неименованных ребер
+                        edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexOne.name));
+                    }
+
+                    let isRepeated2: boolean;
+                    if (this.props.graph.edges.some(e => e.name === edge.name
+                        || (e.vertexOne.name === edge.vertexOne.name && e.vertexTwo.name === edge.vertexOne.name))) {
+                        isRepeated2 = true;
+                        console.log('Repeated edge!');
+                    }
+
+                    if (isRepeated2 !== true) {
+                        console.log(edge);
                         this.props.graph.addEdge(edge);
                         this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
                         this.addEdgeToSVG(new GeometricEdge(edge));
-                        this.updateSvg();*/
-                   // }
-               // }
+                        this.updateSvg();
+                    }
+
+                    this.vertexOne.rename('');
+                }
+
             }
-            // проверка ребра на уникальность (нет ребер с таким же именем и нет ребер между данными двумя вершинами)
-            let isRepeated2: boolean;
-            if (this.props.graph.edges.some(e => e.name === edge.name
-                || (e.vertexOne.name === edge.vertexOne.name && e.vertexTwo.name === edge.vertexTwo.name)
-                || (e.vertexOne.name === edge.vertexTwo.name && e.vertexTwo.name === edge.vertexOne.name))) {
-                isRepeated2 = true;
-                console.log('Repeated edge!');
+            else
+            {
+                // добавление ребра (именование вручную)
+                if (this.props.edgeNaming === true) {
+                    let edgeName = prompt('Введите имя дуги:', '');
+                    if (edgeName !== '' && edgeName !== null) {
+                        edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), edgeName);
+                    } else {
+                        return;
+                    }
+                } else {
+                    // добавление ребра (автоматическое именование)
+                    console.log('adding');
+                    if (this.props.namedEdges == true) {
+                        if (this.graphVisualizer.geometric.edges.length != 0) {
+                            let edgeNumbers = [];
+                            for (let i = 0; i < this.graphVisualizer.geometric.edges.length; i++) {
+                                edgeNumbers[i] = Number(this.graphVisualizer.geometric.edges[i].edge.name);
+                            }
+                            let maxNum = Math.max.apply(null, edgeNumbers);
+                            edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), (maxNum + 1).toString());
+                        } else {
+                            edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name), '0');
+                        }
+                    } else {
+                        // добавленеи неименованных ребер
+                        edge = new DirectedEdge(new Vertex(this.vertexOne.name), new Vertex(this.vertexTwo.name));
+                    }
+
+                    let isRepeated2: boolean;
+                    if (this.props.graph.edges.some(e => e.name === edge.name
+                        || (e.vertexOne.name === edge.vertexOne.name && e.vertexTwo.name === edge.vertexTwo.name))) {
+                        isRepeated2 = true;
+                        console.log('Repeated edge!');
+                    }
+
+                    if (isRepeated2 !== true) {
+                        console.log(edge);
+                        this.props.graph.addEdge(edge);
+                        this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
+                        this.addEdgeToSVG(new GeometricEdge(edge));
+                        this.updateSvg();
+                    }
+
+                    this.vertexOne.rename('');
+                    this.vertexTwo.rename('');
+
+                }
             }
-            // добавление ребра в модель, геом.граф и в svg
-            if (isRepeated2 !== true) {
-                console.log(edge);
-                this.props.graph.addEdge(edge);
-                this.graphVisualizer.geometric.edges.push(new GeometricEdge(edge));
-                this.addEdgeToSVG(new GeometricEdge(edge));
-                this.updateSvg();
-            }
+
+
         }
-        else {
-            alert('Для добавления ребра необходимо выбрать две вершины!')
-        }
-            this.vertexOne.rename('');
-            this.vertexTwo.rename('');
     }
 
     public removeVertex() {
